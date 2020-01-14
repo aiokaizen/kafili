@@ -1,0 +1,93 @@
+{% extends 'orphanage/base.html' %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <!-- Data Table CSS -->
+    <link href="{% static 'orphanage/vendors/datatables.net-dt/css/jquery.dataTables.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'orphanage/vendors/datatables.net-responsive-dt/css/responsive.dataTables.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock stylesheets %}
+
+{% block main %}
+    <div class="hk-pg-wrapper">
+        <div class="hk-pg-header pt-4 mb-0">
+            <h4 class="hk-pg-title rtl font-weight-bold w-100 justify-content-end pr-4 pt-2 pb-0">
+                قائمة الأطفال
+            </h4>
+        </div>
+
+        <div class="hk-sec-wrapper m-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div class="dataTables_length" id="datable_1_length">
+                        <label class="w-100 d-flex justify-content-start align-items-center">
+                            <select name="datable_1_length"
+                                    aria-controls="datable_1"
+                                    class="custom-select custom-select-sm form-control form-control-sm w-25 mr-2">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select> عدد الأسطر في الصفحة
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div id="datable_1_filter" class="dataTables_filter d-flex justify-content-end">
+                        <label>
+                            <input type="search" class="form-control form-control-sm" placeholder="بحث" aria-controls="datable_1">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-hover table-striped table-sm table-bordered">
+                <thead class="thead-active">
+                <tr class="rtl">
+                    <th scope="col">الحالة</th>
+                    <th scope="col">الهواية</th>
+    {#                <th scope="col">مرض مزمن</th>#}
+                    <th scope="col">اليتم</th>
+    {#                <th scope="col">الرؤية</th>#}
+    {#                <th scope="col">مقاس الحذاء</th>#}
+    {#                <th scope="col">تموضع السرير</th>#}
+    {#                <th scope="col">القامة</th>#}
+    {#                <th scope="col">الوزن</th>#}
+                    <th scope="col">الدوار</th>
+                    <th scope="col">رقم الهاتف</th>
+                    <th scope="col">تاريخ الإزدياد</th>
+                    <th scope="col">المستوى الدراسي</th>
+                    <th scope="col">اللقب</th>
+                    <th scope="col">الإسم</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for child in items %}
+                    <tr class="rtl" onclick="location.href='{% url 'orphanage:child_details' child.id %}'" style="cursor: default;">
+                        <td>{{ child.get_status_display|default_if_none:'' }}</td>
+                        <td>{{ child.hobby|default_if_none:'' }}</td>
+    {#                    <td>{{ child.chronic_disease|default_if_none:'' }}</td>#}
+                        <td>{{ child.get_orphan_side_display|default_if_none:'' }}</td>
+    {#                    <td>{{ child.vision|default_if_none:'' }}</td>#}
+    {#                    <td>{{ child.shoo_size|default_if_none:'' }}</td>#}
+    {#                    <td>{{ child.bed_position|default_if_none:'' }}</td>#}
+    {#                    <td>{{ child.height|default_if_none:'' }}</td>#}
+    {#                    <td>{{ child.weight|default_if_none:'' }}</td>#}
+                        <td>{{ child.village|default_if_none:'' }}</td>
+                        <td>{{ child.phone_number|default_if_none:'' }}</td>
+                        <td>{{ child.birthday|default_if_none:'' }}</td>
+                        <td>{{ child.grade|default_if_none:'' }}</td>
+                        <td>{{ child.last_name }}</td>
+                        <th>{{ child.first_name }}</th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% include 'orphanage/includes/pagination.html' %}
+        </div>
+
+    </div>
+    <!-- /Main Content -->
+{% endblock main %}
+
+{% block js %}
+{% endblock js %}

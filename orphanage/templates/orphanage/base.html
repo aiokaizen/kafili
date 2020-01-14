@@ -1,0 +1,202 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>dashgrin I CRM Dashboard</title>
+    <meta name="description" content="A responsive bootstrap 4 admin dashboard template by hencework" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+	<!-- vector map CSS -->
+    <link href="{% static 'orphanage/vendors/vectormap/jquery-jvectormap-2.0.3.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Toggles CSS -->
+    <link href="{% static 'orphanage/vendors/jquery-toggles/css/toggles.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'orphanage/vendors/jquery-toggles/css/themes/toggles-light.css' %}" rel="stylesheet" type="text/css">
+
+	<!-- Morris Charts CSS -->
+    <link href="{% static 'orphanage/vendors/morris.js/morris.css' %}" rel="stylesheet" type="text/css" />
+
+	<!-- Toastr CSS -->
+    <link href="{% static 'orphanage/vendors/jquery-toast-plugin/dist/jquery.toast.min.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'orphanage/dist/css/style.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Basic CSS -->
+    <link href="{% static 'orphanage/dist/css/basic_styles.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'orphanage/dist/css/custom_styles.css' %}" rel="stylesheet" type="text/css">
+
+    {% block stylesheets %}
+    {% endblock stylesheets %}
+</head>
+<body>
+    <!-- HK Wrapper -->
+	<div class="hk-wrapper hk-vertical-nav">
+
+        <!-- Top Navbar -->
+        <nav class="navbar navbar-expand-xl navbar-dark fixed-top hk-navbar">
+            <a class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" href="javascript:void(0);"><span class="feather-icon"><i data-feather="more-vertical"></i></span></a>
+			<a id="navbar_toggle_btn" class="navbar-toggle-btn nav-link-hover" href="javascript:void(0);"><span class="feather-icon"><i data-feather="menu"></i></span></a>
+            <a class="navbar-brand" href="{% url 'orphanage:home' %}">
+                <img class="brand-img d-inline-block" src="{% static 'orphanage/dist/img/logo-dark.png' %}" alt="OMS" />
+            </a>
+			<ul class="navbar-nav hk-navbar-content order-xl-2">
+                <li class="nav-item dropdown dropdown-authentication">
+                    <a class="nav-link dropdown-toggle no-caret" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="media">
+                            <div class="media-img-wrap">
+                                <div class="avatar">
+                                    <img src="{% static 'orphanage/dist/img/avatar.png' %}" alt="{{ request.user.full_name }}" class="avatar-img rounded-circle">
+                                </div>
+                                <span class="badge badge-success badge-indicator"></span>
+                            </div>
+                            <div class="media-body">
+                                <span>{{ user.username }}<i class="zmdi zmdi-chevron-down"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" data-dropdown-in="flipInX" data-dropdown-out="flipOutX">
+                        <a class="dropdown-item" href="{% url 'orphanage:profile' %}"><i class="dropdown-icon zmdi zmdi-account"></i><span>Profile</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'orphanage:logout' %}"><i class="dropdown-icon zmdi zmdi-power"></i><span>Log out</span></a>
+                    </div>
+                </li>
+            </ul>
+
+		</nav>
+        <!-- /Top Navbar -->
+
+        <!-- Vertical Nav -->
+        <nav class="hk-nav hk-nav-dark">
+            <a href="javascript:void(0);" id="hk_nav_close" class="hk-nav-close"><span class="feather-icon"><i data-feather="x"></i></span></a>
+            <div class="nicescroll-bar">
+                <div class="navbar-nav-wrap">
+                    <div class="nav-header">
+                        <span>Orphanage</span>
+                        <span>O</span>
+                    </div>
+                    <ul class="navbar-nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link link-with-badge" href="{% url 'orphanage:children_list' %}">
+                                <i class="ion ion-md-list"></i>
+                                <span class="nav-link-text">لائحة الأطفال</span>
+{#                                <span class="badge badge-success badge-pill">Hot</span>#}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-with-badge" href="{% url 'orphanage:child_insert' %}">
+                                <i class="ion ion-md-add"></i>
+                                <span class="nav-link-text">إضافة طفل</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="hk_nav_backdrop" class="hk-nav-backdrop"></div>
+        <!-- /Vertical Nav -->
+
+        <!-- Setting Panel -->
+        <div class="hk-settings-panel">
+            <div class="nicescroll-bar position-relative">
+                <div class="settings-panel-wrap">
+                    <div class="settings-panel-head">
+                        <img class="brand-img d-inline-block align-top" src="{% static 'orphanage/dist/img/logo-light.png' %}" alt="brand" />
+                        <a href="javascript:void(0);" id="settings_panel_close" class="settings-panel-close"><span class="feather-icon"><i data-feather="x"></i></span></a>
+                    </div>
+
+                    <hr>
+                    <h6 class="mb-5">Navigation</h6>
+                    <p class="font-14">Menu comes in two modes: dark & light</p>
+                    <div class="button-list hk-nav-select mb-10">
+                        <button type="button" id="nav_light_select" class="btn btn-outline-success btn-sm btn-wth-icon icon-wthot-bg"><span class="icon-label"><i class="fa fa-sun-o"></i> </span><span class="btn-text">Light Mode</span></button>
+                        <button type="button" id="nav_dark_select" class="btn btn-outline-light btn-sm btn-wth-icon icon-wthot-bg"><span class="icon-label"><i class="fa fa-moon-o"></i> </span><span class="btn-text">Dark Mode</span></button>
+                    </div>
+                    <hr>
+                    <h6 class="mb-5">Top Nav</h6>
+                    <p class="font-14">Choose your liked color mode</p>
+                    <div class="button-list hk-navbar-select mb-10">
+                        <button type="button" id="navtop_light_select" class="btn btn-outline-light btn-sm btn-wth-icon icon-wthot-bg"><span class="icon-label"><i class="fa fa-sun-o"></i> </span><span class="btn-text">Light Mode</span></button>
+                        <button type="button" id="navtop_dark_select" class="btn btn-outline-success btn-sm btn-wth-icon icon-wthot-bg"><span class="icon-label"><i class="fa fa-moon-o"></i> </span><span class="btn-text">Dark Mode</span></button>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6>Scrollable Header</h6>
+                        <div class="toggle toggle-sm toggle-simple toggle-light toggle-bg-success scroll-nav-switch"></div>
+                    </div>
+                    <button id="reset_settings" class="btn btn-success btn-block btn-reset mt-30">Reset</button>
+                </div>
+            </div>
+            <img class="d-none" src="{% static 'orphanage/dist/img/logo-light.png' %}" alt="brand" />
+            <img class="d-none" src="{% static 'orphanage/dist/img/logo-dark.png' %}" alt="brand" />
+        </div>
+        <!-- /Setting Panel -->
+
+        {% block main %}
+        {% endblock main %}
+
+    </div>
+    <!-- /HK Wrapper -->
+
+    <!-- jQuery -->
+    <script src="{% static 'orphanage/vendors/jquery/dist/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'orphanage/vendors/popper.js/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'orphanage/vendors/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+    <!-- Slimscroll JavaScript -->
+    <script src="{% static 'orphanage/dist/js/jquery.slimscroll.js' %}"></script>
+
+    <!-- Fancy Dropdown JS -->
+    <script src="{% static 'orphanage/dist/js/dropdown-bootstrap-extended.js' %}"></script>
+
+    <!-- FeatherIcons JavaScript -->
+    <script src="{% static 'orphanage/dist/js/feather.min.js' %}"></script>
+
+    <!-- Toggles JavaScript -->
+    <script src="{% static 'orphanage/vendors/jquery-toggles/toggles.min.js' %}"></script>
+    <script src="{% static 'orphanage/dist/js/toggle-data.js' %}"></script>
+
+	<!-- Morris Charts JavaScript -->
+    <script src="{% static 'orphanage/vendors/raphael/raphael.min.js' %}"></script>
+    <script src="{% static 'orphanage/vendors/morris.js/morris.min.js' %}"></script>
+
+	<!-- Counter Animation JavaScript -->
+	<script src="{% static 'orphanage/vendors/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+	<script src="{% static 'orphanage/vendors/jquery.counterup/jquery.counterup.min.js' %}"></script>
+
+	<!-- EChartJS JavaScript -->
+    <script src="{% static 'orphanage/vendors/echarts/dist/echarts-en.min.js' %}"></script>
+
+	<!-- Sparkline JavaScript -->
+    <script src="{% static 'orphanage/vendors/jquery.sparkline/dist/jquery.sparkline.min.js' %}"></script>
+
+	<!-- Vector Maps JavaScript -->
+    <script src="{% static 'orphanage/vendors/vectormap/jquery-jvectormap-2.0.3.min.js' %}"></script>
+    <script src="{% static 'orphanage/vendors/vectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'orphanage/dist/js/vectormap-data.js' %}"></script>
+
+	<!-- Owl JavaScript -->
+    <script src="{% static 'orphanage/vendors/owl.carousel/dist/owl.carousel.min.js' %}"></script>
+
+	<!-- Toastr JS -->
+    <script src="{% static 'orphanage/vendors/jquery-toast-plugin/dist/jquery.toast.min.js' %}"></script>
+
+    <!-- Init JavaScript -->
+    <script src="{% static 'orphanage/dist/js/init.js' %}"></script>
+	<script src="{% static 'orphanage/dist/js/dashboard-data.js' %}"></script>
+
+    <!-- JavaScript libraries -->
+    {% block js %}
+    {% endblock js %}
+
+</body>
+</html>

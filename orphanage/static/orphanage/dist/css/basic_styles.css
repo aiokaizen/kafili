@@ -1,0 +1,20 @@
+.rtl, p, h1, h2, h3, h4, h5, h6, span, input, a, li {
+    text-align: right;
+}
+
+.hk-pg-wrapper.hk-auth-wrapper .auth-form-wrap .auth-form .form-group .input-group-append {
+    left: 0;
+    right: auto;
+}
+
+.pagination-dots {
+    letter-spacing: 3px;
+    line-height: 24px;
+    padding: 0 10px;
+    border: 1px solid #dee2e6;
+    border-left: 0;
+}
+
+table.table thead th {
+    font-weight: bold;
+}
