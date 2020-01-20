@@ -80,8 +80,13 @@ def children_list(request):
 
 @login_required
 def child_details(request, id):
+    child = Child.objects.get(pk=id)
 
-    return render(request, 'orphanage/child_details.html')
+    context = {
+        'child': child,
+    }
+
+    return render(request, 'orphanage/child_details.html', context)
 
 
 @login_required

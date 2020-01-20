@@ -1,6 +1,6 @@
-
 from django.conf.urls import url
 
+from kafili import settings
 from orphanage.views import *
 
 app_name = 'orphanage'

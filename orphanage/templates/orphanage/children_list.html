@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <table class="table table-hover table-striped table-sm table-bordered">
+            <table class="table table-hover table-striped table-sm table-bordered children-table">
                 <thead class="thead-active">
                 <tr class="rtl">
                     <th scope="col">الحالة</th>
@@ -58,11 +58,12 @@
                     <th scope="col">المستوى الدراسي</th>
                     <th scope="col">اللقب</th>
                     <th scope="col">الإسم</th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for child in items %}
-                    <tr class="rtl" onclick="location.href='{% url 'orphanage:child_details' child.id %}'" style="cursor: default;">
+                    <tr class="rtl" onclick="location.href='{% url 'orphanage:child_details' child.id %}'">
                         <td>{{ child.get_status_display|default_if_none:'' }}</td>
                         <td>{{ child.hobby|default_if_none:'' }}</td>
     {#                    <td>{{ child.chronic_disease|default_if_none:'' }}</td>#}
@@ -74,10 +75,12 @@
     {#                    <td>{{ child.weight|default_if_none:'' }}</td>#}
                         <td>{{ child.village|default_if_none:'' }}</td>
                         <td>{{ child.phone_number|default_if_none:'' }}</td>
-                        <td>{{ child.birthday|default_if_none:'' }}</td>
+                        <td>{{ child.birthday|date:'d/m/Y'|default_if_none:'' }}</td>
                         <td>{{ child.grade|default_if_none:'' }}</td>
                         <td>{{ child.last_name }}</td>
                         <th>{{ child.first_name }}</th>
+                        <th><img src="{% if child.picture %}{{ child.picture.url }}{% else %}/media/images/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}"></th>
+{#                        <th>{% if child.picture %}<img src="{{ child.picture.url }}">{% endif %}</th>#}
                     </tr>
                 {% endfor %}
                 </tbody>

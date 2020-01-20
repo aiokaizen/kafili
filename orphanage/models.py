@@ -30,7 +30,8 @@ class Child(models.Model):
 
     first_name = models.CharField('الإسم', max_length=255)
     last_name = models.CharField('اللقب', max_length=255)
-    picture = models.ImageField('الصورة', upload_to='children/pictures')
+    full_name = models.CharField('الإسم الكامل', max_length=255, null=True, blank=True)
+    picture = models.ImageField('الصورة', upload_to='images/children')
     sex = models.CharField('الجنس', max_length=1, choices=SEX_CHOICES, null=True, blank=True)
     grade = models.CharField('المستوى الدراسي', max_length=10, null=True, blank=True)
     birthday = models.DateField('تاريخ الإزدياد', null=True, blank=True)
@@ -48,10 +49,11 @@ class Child(models.Model):
 
     # Functions
     def __str__(self):
-        return self.first_name.strip('? ') + ' ' + self.last_name
+        return self.full_name
 
-    def get_full_name(self):
-        return str(self)
+    def update_full_name(self):
+        self.full_name = self.first_name + ' ' + self.last_name
+        self.save(update_fields=['full_name', ])
 
     @classmethod
     def list(cls):

@@ -2,3 +2,25 @@
 .table.table-hover tbody tr:hover {
     background-color: #ebe4ec;
 }
+
+table.children-table th img {
+    width: 30px;
+}
+
+table.children-table tbody tr:hover {
+    cursor: pointer;
+}
+
+
+/* Child details */
+.basic-infos table th {
+    width: 120px;
+    font-weight: bold;
+    color: #555;
+}
+
+.basic-infos table td {
+    font-weight: bold;
+    color: #555;
+}
+
