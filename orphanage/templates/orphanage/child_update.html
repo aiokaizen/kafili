@@ -1,11 +1,254 @@
 {% extends 'orphanage/base.html' %}
+{% load staticfiles %}
 
 {% block stylesheets %}
+    <style>
+        img {
+            width: 100%;
+        }
+    </style>
+
+    <!-- Daterangepicker CSS -->
+    <link href="{% static 'orphanage/vendors/daterangepicker/daterangepicker.css' %}" rel="stylesheet" type="text/css" />
+
 {% endblock stylesheets %}
 
 {% block  main %}
-    <h1>Orphan Update</h1>
+    <div class="hk-pg-wrapper">
+
+        <div class="hk-pg-header pt-4 mb-0">
+            <h4 class="hk-pg-title rtl font-weight-bold w-100 justify-content-end pr-4 pt-2 pb-0">
+                {% if form.instance.id %}
+                    تحديث بيانات التلميذ{% if form.instance.sex == 'f' %}ة{% endif %} {{ form.instance.full_name }}
+                {% else %}
+                    إضافة تلميذ(ة)
+                {% endif %}
+            </h4>
+        </div>
+
+        <div class="container mt-3">
+            <div class="row infos rtl">
+                <div class="col-md-9 col-sm-12 basic-infos">
+                    <div class="row">
+                        <div class="col-sm">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_last_name">{{ form.last_name.label }}</label>
+                                        {{ form.last_name }}
+                                        {% if form.last_name.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.last_name.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_first_name">{{ form.first_name.label }}</label>
+                                        {{ form.first_name }}
+                                        {% if form.first_name.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.first_name.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_birthday">{{ form.birthday.label }}</label>
+                                        {{ form.birthday }}
+                                        {% if form.birthday.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.birthday.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_first_name">{{ form.sex.label }}</label>
+                                        {{ form.sex }}
+                                        {% if form.sex.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.sex.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_birthday">{{ form.phone_number.label }}</label>
+                                        {{ form.phone_number }}
+                                        {% if form.phone_number.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.phone_number.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_first_name">{{ form.village.label }}</label>
+                                        {{ form.village }}
+                                        {% if form.village.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.village.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_birthday">{{ form.weight.label }}</label>
+                                        {{ form.weight }}
+                                        {% if form.weight.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.weight.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_first_name">{{ form.height.label }}</label>
+                                        {{ form.height }}
+                                        {% if form.height.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.height.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_birthday">{{ form.bed_position.label }}</label>
+                                        {{ form.bed_position }}
+                                        {% if form.bed_position.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.bed_position.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_first_name">{{ form.shoo_size.label }}</label>
+                                        {{ form.shoo_size }}
+                                        {% if form.shoo_size.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.shoo_size.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_birthday">{{ form.vision.label }}</label>
+                                        {{ form.vision }}
+                                        {% if form.vision.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.vision.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_first_name">{{ form.chronic_disease.label }}</label>
+                                        {{ form.chronic_disease}}
+                                        {% if form.chronic_disease.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.chronic_disease.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_birthday">{{ form.grade.label }}</label>
+                                        {{ form.grade }}
+                                        {% if form.grade.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.grade.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_first_name">{{ form.hobby.label }}</label>
+                                        {{ form.hobby}}
+                                        {% if form.hobby.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.hobby.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_birthday">{{ form.orphan_side.label }}</label>
+                                        {{ form.orphan_side }}
+                                        {% if form.orphan_side.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.orphan_side.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_first_name">{{ form.status.label }}</label>
+                                        {{ form.status}}
+                                        {% if form.status.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.status.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <hr>
+                                <button class="btn btn-primary font-weight-bold" type="submit">{% if form.instance.id %}تحديث{% else %}إضافة{% endif %}</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-12 img_container">
+                    <img class="image" src="{% if form.instance.picture %}{{ form.instance.picture.url }}{% else %}/media/images/default/{% if form.instance.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ form.instance.full_name }}">
+                    <div>
+{#                        {{ form.picture }}#}
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control text-truncate" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-append">
+                                <span class=" btn btn-primary btn-file">
+                                    <span class="fileinput-new">إختر الصورة</span>
+                                    <span class="fileinput-exists">تغيير الصورة</span>
+                                    <input type="file" name="...">
+                                </span>
+                                <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">X</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 {% endblock main %}
 
 {% block js %}
+
+    <!-- Daterangepicker JavaScript -->
+    <script src="{% static 'orphanage/vendors/moment/min/moment.min.js' %}"></script>
+    <script src="{% static 'orphanage/vendors/daterangepicker/daterangepicker.js' %}"></script>
+
+    <script>
+        /* Single table*/
+        $('input[role="datepicker"]').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 1990,
+            "cancelClass": "btn-secondary",
+            maxYear: parseInt(moment().format('YYYY'),10)
+        }, function(start, end, label) {
+            {#var years = moment().diff(start, 'years');#}
+            {#alert("You are " + years + " years old!");#}
+        });
+    </script>
+
 {% endblock js %}

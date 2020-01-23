@@ -1,11 +1,13 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import logout as django_logout
 
-from orphanage.forms import ConnectionForm
+from orphanage.forms import ConnectionForm, ChildForm
 from orphanage.models import Child
 
 
@@ -91,11 +93,34 @@ def child_details(request, id):
 
 @login_required
 def child_insert(request):
+    
+    form = ChildForm()
 
-    return render(request, 'orphanage/child_update.html')
+    context = {
+        'form': form
+    }
+
+    return render(request, 'orphanage/child_update.html', context)
 
 
 @login_required
 def child_update(request, id):
 
-    return render(request, 'orphanage/child_update.html')
+    try:
+        child = Child.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return Http404()
+
+    if request.method == 'POST':
+        form = ChildForm(request.POST)
+        if form.is_valid():
+            form.instance.save()
+            return redirect(reverse('orphanage:child_details', args=[child.id]))
+    else:
+        form = ChildForm(instance=child)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'orphanage/child_update.html', context)
