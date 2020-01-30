@@ -112,12 +112,13 @@ def child_update(request, id):
         return Http404()
 
     if request.method == 'POST':
-        form = ChildForm(request.POST)
+        form = ChildForm(data=request.POST, files=request.FILES, instance=child)
         if form.is_valid():
+            form.instance.birthday = form.cleaned_data['birthday']
             form.instance.save()
             return redirect(reverse('orphanage:child_details', args=[child.id]))
     else:
-        form = ChildForm(instance=child)
+        form = ChildForm(instance=child, initial={'birthday': child.birthday})
 
     context = {
         'form': form,

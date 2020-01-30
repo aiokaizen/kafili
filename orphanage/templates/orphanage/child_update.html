@@ -24,14 +24,18 @@
                     إضافة تلميذ(ة)
                 {% endif %}
             </h4>
+            {% if form.errors %}
+                {{ form.errors }}
+            {% endif %}
         </div>
 
         <div class="container mt-3">
-            <div class="row infos rtl">
-                <div class="col-md-9 col-sm-12 basic-infos">
-                    <div class="row">
-                        <div class="col-sm">
-                            <form>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row infos rtl">
+                    <div class="col-md-9 col-sm-12 basic-infos">
+                        <div class="row">
+                            <div class="col-sm">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label class="font-weight-bold" for="id_last_name">{{ form.last_name.label }}</label>
@@ -201,31 +205,22 @@
                                 </div>
                                 <hr>
                                 <button class="btn btn-primary font-weight-bold" type="submit">{% if form.instance.id %}تحديث{% else %}إضافة{% endif %}</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-12 img_container">
-                    <img class="image" src="{% if form.instance.picture %}{{ form.instance.picture.url }}{% else %}/media/images/default/{% if form.instance.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ form.instance.full_name }}">
-                    <div>
-{#                        {{ form.picture }}#}
-                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                            <div class="form-control text-truncate" data-trigger="fileinput">
-                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
-                                <span class="fileinput-filename"></span>
                             </div>
-                            <span class="input-group-append">
-                                <span class=" btn btn-primary btn-file">
-                                    <span class="fileinput-new">إختر الصورة</span>
-                                    <span class="fileinput-exists">تغيير الصورة</span>
-                                    <input type="file" name="...">
-                                </span>
-                                <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">X</a>
-                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-12 img_container">
+                        <img class="image" src="{% if form.instance.picture %}{{ form.instance.picture.url }}{% else %}/media/images/default/{% if form.instance.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ form.instance.full_name }}">
+                        <div>
+                            {{ form.picture }}
+                            {% if form.picture.errors %}
+                                <div class="invalid-feedback d-block font-weight-bold">
+                                    {{ form.picture.errors }}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
 
     </div>
@@ -238,17 +233,26 @@
     <script src="{% static 'orphanage/vendors/daterangepicker/daterangepicker.js' %}"></script>
 
     <script>
-        /* Single table*/
-        $('input[role="datepicker"]').daterangepicker({
-            singleDatePicker: true,
-            showDropdowns: true,
-            minYear: 1990,
-            "cancelClass": "btn-secondary",
-            maxYear: parseInt(moment().format('YYYY'),10)
+        let datepickers = $('input[role="datepicker"]');
+        let dates = [];
+        for (let i = 0; i < datepickers.length; i++)
+            dates.push($(datepickers[i]).val());
+
+        datepickers.daterangepicker({
+            "singleDatePicker": true,
+            "autoApply": false,
+            "locale": {
+                "format": "DD/MM/YYYY",
+                "separator": " - ",
+            },
+            "startDate": "01/01/2000",
+            "endDate": parseInt(moment().format('YYYY'), 10),
+            "opens": "left",
         }, function(start, end, label) {
-            {#var years = moment().diff(start, 'years');#}
-            {#alert("You are " + years + " years old!");#}
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         });
+        for (let i = 0; i < datepickers.length; i++)
+            $(datepickers[i]).val(dates[i]);
     </script>
 
 {% endblock js %}

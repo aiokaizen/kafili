@@ -31,7 +31,7 @@ class Child(models.Model):
     first_name = models.CharField('الإسم', max_length=255)
     last_name = models.CharField('اللقب', max_length=255)
     full_name = models.CharField('الإسم الكامل', max_length=255, null=True, blank=True)
-    picture = models.ImageField('الصورة', upload_to='images/children')
+    picture = models.ImageField('الصورة', upload_to='images/children', null=True, blank=True)
     sex = models.CharField('الجنس', max_length=1, choices=SEX_CHOICES, null=True, blank=True)
     grade = models.CharField('المستوى الدراسي', max_length=10, null=True, blank=True)
     birthday = models.DateField('تاريخ الإزدياد', null=True, blank=True)
