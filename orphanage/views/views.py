@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,6 +10,7 @@ from django.contrib.auth import logout as django_logout
 
 from orphanage.forms import ConnectionForm, ChildForm
 from orphanage.models import Child
+from orphanage.views.printing import print_cards
 
 
 def connexion(request):
@@ -36,21 +38,37 @@ def logout(request):
     return redirect(reverse('orphanage:login'))
 
 
+def home(request):
+    context = {
+        'page_title': 'Home',
+    }
+
+    return render(request, 'orphanage/home.html', context)
+
+
 @login_required
 def profile(request):
 
-    return render(request, 'orphanage/profile.html')
+    context = {
+        'page_title': 'Profile'
+    }
+
+    return render(request, 'orphanage/profile.html', context)
 
 
 @login_required
-def children_list(request):
-    children = Child.list()
+def children(request):
+    qset = Child.list(**request.GET)
+
+    if request.method == 'POST':
+        if request.POST['action'] == 'print':
+            return print_cards(request)
 
     number_per_page = 20
     next_page = None
     previous_page = None
 
-    paginator = Paginator(children, number_per_page)
+    paginator = Paginator(qset, number_per_page)
     if request.GET.get('page'):
         page = request.GET.get('page')
     else:
@@ -75,18 +93,23 @@ def children_list(request):
         'range': paginator.page_range,
         'next_page': next_page,
         'previous_page': previous_page,
+        'page_title': 'Children'
     }
 
     return render(request, 'orphanage/children_list.html', context)
 
 
 @login_required
-def child_details(request, id):
-    child = Child.objects.get(pk=id)
+def child_details(request, child_id):
+    child = Child.objects.get(pk=child_id)
 
     context = {
         'child': child,
+        'page_title': 'Child details'
     }
+
+    # from weasyprint import HTML
+    # HTML(request.get_full_path()).write_pdf('/tmp/weasyprint-website.pdf')
 
     return render(request, 'orphanage/child_details.html', context)
 
@@ -97,17 +120,18 @@ def child_insert(request):
     form = ChildForm()
 
     context = {
-        'form': form
+        'form': form,
+        'page_title': 'Child insert'
     }
 
     return render(request, 'orphanage/child_update.html', context)
 
 
 @login_required
-def child_update(request, id):
+def child_update(request, child_id):
 
     try:
-        child = Child.objects.get(id=id)
+        child = Child.objects.get(id=child_id)
     except ObjectDoesNotExist:
         return Http404()
 
@@ -116,12 +140,16 @@ def child_update(request, id):
         if form.is_valid():
             form.instance.birthday = form.cleaned_data['birthday']
             form.instance.save()
+            child_title = 'الطفل' if child.sex == 'm' else 'الطفلة'
+            messages.success(request, 'تمت عملية تحديث بيانات ' + child_title + ' بنجاح.')
             return redirect(reverse('orphanage:child_details', args=[child.id]))
+        messages.error(request, 'المرجو مراجعة بيانات التلميذ(ة)')
     else:
         form = ChildForm(instance=child, initial={'birthday': child.birthday})
 
     context = {
         'form': form,
+        'page_title': 'Child update'
     }
 
     return render(request, 'orphanage/child_update.html', context)

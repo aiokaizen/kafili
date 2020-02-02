@@ -18,13 +18,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 from kafili import settings
-from orphanage.views import children_list as orphanage_home
+from orphanage.views import home
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('^orphanage/', include('orphanage.urls', namespace="orphanage")),
-    url('^$', orphanage_home),
+    url('^$', home),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

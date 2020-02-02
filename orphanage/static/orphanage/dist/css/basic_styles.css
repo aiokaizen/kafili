@@ -1,5 +1,7 @@
 .rtl, p, h1, h2, h3, h4, h5, h6, span, input, a, li {
     text-align: right;
+    justify-content: flex-end;
+    /*direction: rtl;*/
 }
 
 .hk-pg-wrapper.hk-auth-wrapper .auth-form-wrap .auth-form .form-group .input-group-append {
@@ -18,3 +20,21 @@
 table.table thead th {
     font-weight: bold;
 }
+
+
+/* TOASTER STYLES*/
+.toast-top-right {
+    top: 70px;
+}
+#toast-container > .toast-error {
+    background-color: #ff2827;
+}
+
+#toast-container > .toast-success {
+    background-color: #22af47;
+}
+
+#toast-container > .toast-warning {
+    background-color: #fdad34;
+}
+/* / TOASTER STYLES*/

@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load staticfiles template_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,22 +78,22 @@
             <a href="javascript:void(0);" id="hk_nav_close" class="hk-nav-close"><span class="feather-icon"><i data-feather="x"></i></span></a>
             <div class="nicescroll-bar">
                 <div class="navbar-nav-wrap">
-                    <div class="nav-header">
-                        <span>Orphanage</span>
-                        <span>O</span>
-                    </div>
+{#                    <div class="nav-header">#}
+{#                        <span>Orphanage</span>#}
+{#                        <span>O</span>#}
+{#                    </div>#}
                     <ul class="navbar-nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link link-with-badge" href="{% url 'orphanage:children_list' %}">
-                                <i class="ion ion-md-list"></i>
+                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:children' %}">
                                 <span class="nav-link-text">لائحة الأطفال</span>
+                                <i class="ion ion-md-list"></i>
 {#                                <span class="badge badge-success badge-pill">Hot</span>#}
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link link-with-badge" href="{% url 'orphanage:child_insert' %}">
-                                <i class="ion ion-md-add"></i>
+                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:child_insert' %}">
                                 <span class="nav-link-text">إضافة طفل</span>
+                                <i class="ion ion-md-add"></i>
                             </a>
                         </li>
                     </ul>
@@ -103,44 +103,24 @@
         <div id="hk_nav_backdrop" class="hk-nav-backdrop"></div>
         <!-- /Vertical Nav -->
 
-        <!-- Setting Panel -->
-        <div class="hk-settings-panel">
-            <div class="nicescroll-bar position-relative">
-                <div class="settings-panel-wrap">
-                    <div class="settings-panel-head">
-                        <img class="brand-img d-inline-block align-top" src="{% static 'orphanage/dist/img/logo-light.png' %}" alt="brand" />
-                        <a href="javascript:void(0);" id="settings_panel_close" class="settings-panel-close"><span class="feather-icon"><i data-feather="x"></i></span></a>
-                    </div>
 
-                    <hr>
-                    <h6 class="mb-5">Navigation</h6>
-                    <p class="font-14">Menu comes in two modes: dark & light</p>
-                    <div class="button-list hk-nav-select mb-10">
-                        <button type="button" id="nav_light_select" class="btn btn-outline-success btn-sm btn-wth-icon icon-wthot-bg"><span class="icon-label"><i class="fa fa-sun-o"></i> </span><span class="btn-text">Light Mode</span></button>
-                        <button type="button" id="nav_dark_select" class="btn btn-outline-light btn-sm btn-wth-icon icon-wthot-bg"><span class="icon-label"><i class="fa fa-moon-o"></i> </span><span class="btn-text">Dark Mode</span></button>
-                    </div>
-                    <hr>
-                    <h6 class="mb-5">Top Nav</h6>
-                    <p class="font-14">Choose your liked color mode</p>
-                    <div class="button-list hk-navbar-select mb-10">
-                        <button type="button" id="navtop_light_select" class="btn btn-outline-light btn-sm btn-wth-icon icon-wthot-bg"><span class="icon-label"><i class="fa fa-sun-o"></i> </span><span class="btn-text">Light Mode</span></button>
-                        <button type="button" id="navtop_dark_select" class="btn btn-outline-success btn-sm btn-wth-icon icon-wthot-bg"><span class="icon-label"><i class="fa fa-moon-o"></i> </span><span class="btn-text">Dark Mode</span></button>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6>Scrollable Header</h6>
-                        <div class="toggle toggle-sm toggle-simple toggle-light toggle-bg-success scroll-nav-switch"></div>
-                    </div>
-                    <button id="reset_settings" class="btn btn-success btn-block btn-reset mt-30">Reset</button>
-                </div>
-            </div>
-            <img class="d-none" src="{% static 'orphanage/dist/img/logo-light.png' %}" alt="brand" />
-            <img class="d-none" src="{% static 'orphanage/dist/img/logo-dark.png' %}" alt="brand" />
+        <div class="hk-pg-wrapper">
+            <!-- /bread_crumbs -->
+            <nav class="hk-breadcrumb" aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-light bg-transparent mb-0 font-weight-bold">
+                {% with breadcrumbs=page_title|get_breadcrumbs:request.path %}
+                    {% for parent in breadcrumbs.0 %}
+                        <li class="breadcrumb-item"><a href="{{ parent.url }}">{{ parent.label }}</a></li>
+                    {% endfor %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbs.1 }}</li>
+                {% endwith %}
+                </ol>
+            </nav>
+
+            {% block main %}
+
+            {% endblock main %}
         </div>
-        <!-- /Setting Panel -->
-
-        {% block main %}
-        {% endblock main %}
 
     </div>
     <!-- /HK Wrapper -->
@@ -196,6 +176,35 @@
     <!-- Init JavaScript -->
     <script src="{% static 'orphanage/dist/js/init.js' %}"></script>
 	<script src="{% static 'orphanage/dist/js/dashboard-data.js' %}"></script>
+
+    <script>
+        function show_alert(message, level, position) {
+            toastr.options = {
+                "progressBar": true,
+                "positionClass": "toast-" + position,
+                "showDuration": "100",
+                "hideDuration": "1000",
+                "timeOut": "3000",
+                "extendedTimeOut": "1000",
+                "rtl": true,
+            };
+
+            if (level === 'success') {
+                toastr.success('', message);
+            }
+            else if (level === 'danger') {
+                toastr.error('', message);
+            }
+            else if (level === 'warning') {
+                toastr.warning('', message);
+            }
+        }
+
+
+        {% for message in messages %}
+            show_alert("{{ message }}", "{{ message.tags }}", 'top-right');
+        {% endfor %}
+    </script>
 
     <!-- JavaScript libraries -->
     {% block js %}

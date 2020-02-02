@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'import_export',
 
+    # 'wkhtmltopdf',
+
     'orphanage',
 ]
 
@@ -55,7 +57,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'kafili.urls'
-SESSION_EXPIRE_SECONDS = 3600  # 1 hour
+# SESSION_EXPIRE_SECONDS = 3600  # 1 hour
 
 TEMPLATES = [
     {
@@ -68,6 +70,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'orphanage.context_processors.breadcrumbs_processor',
             ],
         },
     },
@@ -139,3 +143,9 @@ DATE_INPUT_FORMATS = [
     '%B %d %Y', '%B %d, %Y',                # 'October 25 2006', 'October 25, 2006'
     '%d %B %Y', '%d %B, %Y',                # '25 October 2006', '25 October, 2006'
 ]
+
+
+try:
+    from kafili.local_settings import *
+except ModuleNotFoundError:
+    pass

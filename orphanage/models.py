@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 
 class Child(models.Model):
@@ -56,6 +57,14 @@ class Child(models.Model):
         self.save(update_fields=['full_name', ])
 
     @classmethod
-    def list(cls):
-        list = cls.objects.all()
-        return list
+    def list(cls, **kwargs):
+
+        filters = Q()
+        if 'name' in kwargs:
+            name = kwargs['name'][0]
+            filters = Q(first_name__contains=name) | Q(last_name__contains=name) | Q(full_name__contains=name)
+        if 'ids' in kwargs:
+            ids = kwargs['ids']
+            filters &= Q(id__in=ids)
+
+        return cls.objects.filter(filters)
