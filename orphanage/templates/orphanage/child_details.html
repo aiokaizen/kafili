@@ -64,8 +64,8 @@
             </div>
             <div class="row">
                 <div class="col-12 mt-2">
-                    <a class="btn btn-secondary font-weight-bold" href="{% url 'orphanage:print_card' child.id %}">بطاقة التلميذ{% if child.sex == 'f' %}ة{% endif %}</a>
-
+                    <a class="btn btn-secondary font-weight-bold" href="{% url 'orphanage:print_card' child.id %}" target="_blank">طباعة بطاقة التلميذ{% if child.sex == 'f' %}ة{% endif %}</a>
+                    <a class="btn btn-danger text-white font-weight-bold" onclick="show_delete_dialog()" >مسح البيانات</a>
                     <a class="btn btn-primary font-weight-bold" href="{% url 'orphanage:child_update' child.id %}">تحديث البيانات</a>
                 </div>
             </div>
@@ -74,4 +74,34 @@
 {% endblock main %}
 
 {% block js %}
+    <script>
+        let toasts = [];
+        function show_delete_dialog() {
+            show_dialog("هل تريد فعلا مسح المعلومات المتعلقة بهذا التلميذ؟", "تأكيد");
+        }
+        function show_dialog(message, title) {
+
+            let btn = '<br /><br /><button type="button" class="btn btn-danger ml-2" onclick="delete_child()">نعم</button><button type="button" class="btn btn-success" onclick="clear_toasts()">لا</button>';
+            toastr.options = {
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "timeOut": 10000,
+                "extendedTimeOut": 5000,
+                "tapToDismiss": false,
+                "rtl": true,
+            };
+
+            toasts.push(toastr.warning(message + btn, title));
+        }
+        function delete_child(){
+            console.log('deleting child infos');
+            clear_toasts();
+        }
+
+        function clear_toasts() {
+            for(let i = 0; i < toasts.length; i++) {
+                toastr.clear($(toasts[i]), {force: true});
+            }
+        }
+    </script>
 {% endblock js %}

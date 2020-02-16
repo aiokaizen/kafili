@@ -38,15 +38,16 @@ table.children-table tbody tr:hover {
 }
 
 .ar-boxes .ar-link-box * {
-    color: var(--blue);
+/*     color: var(--green); */
 }
 
 .ar-boxes .ar-link-box a {
     display: block;
     padding: 20px;
+    color: #444;
     position: relative;
     font-size: 30px !important;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     z-index: 1;
 }
 
@@ -62,16 +63,12 @@ table.children-table tbody tr:hover {
     z-index: -1;
 }
 
-.ar-boxes .ar-link-box.bbb a::after {
-    background-color: var(--blue);
-}
-
 .ar-boxes .ar-link-box a:hover {
-    color: white !important;
+    color: var(--green);
 }
 
-.ar-boxes .ar-link-box a:hover::after {
-    height: 100%;
+.ar-boxes .ar-link-box.cgreen a:hover::after {
+    background-color: var(--green);
 }
 /*/ HOME PAGE*/
 

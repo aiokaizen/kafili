@@ -35,7 +35,10 @@
     {#                    </div>#}
                         <div class="btn-toolbar d-inline-block mb-25 mr-10" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group mr-2" role="group" aria-label="First group">
-                                <a  class="btn btn-outline-light" onclick="print()" title="طباعة البطاقات"><i class="icon-printer"></i></a>
+{#                                <a  class="btn btn-outline-light" onclick="print()" title="طباعة البطاقات"><i class="icon-printer"></i></a>#}
+                                <a  class="btn btn-outline-light" href="{% url 'orphanage:print_cards' %}" target="_blank" title="طباعة البطاقات">
+                                    <i class="icon-printer"></i>
+                                </a>
     {#                            <button type="button" class="btn btn-outline-light"><i class="icon-list"></i></button>#}
     {#                            <button type="button" class="btn btn-outline-light"><i class="icon-menu"></i></button>#}
     {#                            <button type="button" class="btn btn-outline-light"><i class="icon-login"></i></button>#}

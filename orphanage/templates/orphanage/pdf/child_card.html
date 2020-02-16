@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ child.id }}_{{ child.full_name }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        body {
+            background-color: #333;
+            color: #eee;
+            direction: rtl;
+            width: 14cm;
+            height: 9.8cm;
+        }
+        .child-card {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+    {% if child %}
+        <div class="child-card">
+            <img style="width: 120px; margin-top: 10px;" src="{% if child.picture %}{{ child.picture.url }}{% else %}/media/images/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="">
+            <h2 style="writing-mode: vertical-rl; text-orientation: mixed;">{{ child.full_name }}</h2>
+        </div>
+    {% else %}
+        {% for child in children %}
+            <div class="child-card">
+                <img style="width: 120px; margin-top: 10px;" src="{% if child.picture %}{{ child.picture.url }}{% else %}/media/images/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="">
+                <h2 style="writing-mode: vertical-rl; text-orientation: mixed;">{{ child.full_name }}</h2>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+</body>
+</html>

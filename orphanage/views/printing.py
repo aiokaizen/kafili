@@ -1,8 +1,11 @@
+import pdfkit
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
+
+from wkhtmltopdf.views import PDFTemplateView, PDFTemplateResponse
 
 from orphanage.models import Child
 
@@ -67,6 +70,21 @@ def print_cards(request, child_id=''):
             child = Child.objects.get(pk=child_id)
             print('printing card for:', child)
             child_title = 'الطفل' if child.sex == 'm' else 'الطفلة'
+
+
+
+
+
+            pdf = pdfkit.from_url(request.get_host() + '', False)
+            response = HttpResponse(pdf, content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="ourcodeworld.pdf"'
+
+            return response
+
+
+
+
+
             messages.success(request, 'لقد تمت طباعة بطاقة ' + child_title + ' بنجاح.')
             return redirect(reverse('orphanage:child_details', kwargs={'child_id': child_id}))
         except ObjectDoesNotExist:
@@ -80,6 +98,45 @@ def print_cards(request, child_id=''):
         else:
             children = Child.objects.all()
             print('printing cards for all children')
+            # html = HTML('http://weasyprint.org/').write_pdf('/tmp/weasyprint-website.pdf')
             messages.success(request, 'تمت طباعة بطاقات الأطفال بنجاح.')
 
     return redirect(reverse('orphanage:children'))
+
+
+class ChildCardPDF(PDFTemplateView):
+
+    cmd_options = {
+        # 'page-size': 'A4',
+        'page-width': '140',
+        'page-height': '80',
+        'orientation': 'portrait',  # ''landscape',
+        'margin-top': 0,
+        'margin-bottom': 0,
+        'margin-left': 0,
+        'margin-right': 0,
+    }
+
+    # filename = 'child_card.pdf'
+    filename = None
+
+    template_name = 'orphanage/pdf/child_card.html'
+    header_template = 'orphanage/pdf/header.html'
+    footer_template = 'orphanage/pdf/footer.html'
+
+    def get(self, request, *args, **kwargs):
+
+        context = {}
+
+        if 'child_id' in kwargs:
+            child = Child.objects.get(pk=kwargs['child_id'])
+            context['child'] = child
+        else:
+            children = Child.objects.all()[:10]
+            context['children'] = children
+
+        response = PDFTemplateResponse(
+            request=request, template=self.template_name, filename=self.filename, context=context,
+            show_content_in_browser=False, cmd_options=self.cmd_options,
+        )
+        return response

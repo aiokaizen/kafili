@@ -1,9 +1,14 @@
-from django.contrib.messages import constants as messages
+# encoding: utf-8
 
 TABLE_MAX_ITEMS = 10
 
 BREADCRUMBS_DEPTH_LEVEL = 2
 
-MESSAGE_TAGS = {
-    messages.ERROR: 'danger',
+
+PDF_CMD = 'wkhtmltopdf.exe'
+IMG_CMD = 'wkhtmltoimage.exe'
+WKHTMLTOPDF_CMD = "C:/Program Files/wkhtmltopdf/bin/" + PDF_CMD
+WKHTMLTOIMG_CMD = "C:/Program Files/wkhtmltopdf/bin/" + IMG_CMD
+WKHTMLTOPDF_CMD_OPTIONS = {
+    'encoding': 'utf8',
 }

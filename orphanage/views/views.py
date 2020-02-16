@@ -10,7 +10,6 @@ from django.contrib.auth import logout as django_logout
 
 from orphanage.forms import ConnectionForm, ChildForm
 from orphanage.models import Child
-from orphanage.views.printing import print_cards
 
 
 def connexion(request):
@@ -33,11 +32,13 @@ def connexion(request):
     })
 
 
+@login_required
 def logout(request):
     django_logout(request)
     return redirect(reverse('orphanage:login'))
 
 
+@login_required
 def home(request):
     context = {
         'page_title': 'Home',
@@ -62,7 +63,8 @@ def children(request):
 
     if request.method == 'POST':
         if request.POST['action'] == 'print':
-            return print_cards(request)
+            # return print_cards(request)
+            pass
 
     number_per_page = 20
     next_page = None
@@ -102,6 +104,10 @@ def children(request):
 @login_required
 def child_details(request, child_id):
     child = Child.objects.get(pk=child_id)
+
+    if request.method == 'POST':
+        if request.POST['action'] == 'delete':
+            child.delete()
 
     context = {
         'child': child,

@@ -52,6 +52,9 @@ class Child(models.Model):
     def __str__(self):
         return self.full_name
 
+    def delete(self, using=None, keep_parents=False):
+        self.delete()
+
     def update_full_name(self):
         self.full_name = self.first_name + ' ' + self.last_name
         self.save(update_fields=['full_name', ])
