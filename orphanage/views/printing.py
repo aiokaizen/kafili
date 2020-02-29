@@ -1,9 +1,6 @@
-import pdfkit
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404, HttpResponse
-from django.shortcuts import redirect
-from django.urls import reverse
+from django.http import Http404
+from django.template.response import TemplateResponse
 
 from wkhtmltopdf.views import PDFTemplateView, PDFTemplateResponse
 
@@ -61,82 +58,51 @@ from orphanage.models import Child
 #     if pisaStatus.err:
 #        return HttpResponse('We had some errors <pre>' + html + '</pre>')
 #     return response
-
-
-def print_cards(request, child_id=''):
-
-    if child_id != '':
-        try:
-            child = Child.objects.get(pk=child_id)
-            print('printing card for:', child)
-            child_title = 'الطفل' if child.sex == 'm' else 'الطفلة'
-
-
-
-
-
-            pdf = pdfkit.from_url(request.get_host() + '', False)
-            response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="ourcodeworld.pdf"'
-
-            return response
-
-
-
-
-
-            messages.success(request, 'لقد تمت طباعة بطاقة ' + child_title + ' بنجاح.')
-            return redirect(reverse('orphanage:child_details', kwargs={'child_id': child_id}))
-        except ObjectDoesNotExist:
-            raise Http404()
-    else:
-        if 'children' in request.POST:
-            children_ids = request.POST.getlist('children')
-            children = Child.list(ids=children_ids)
-            print('printing cards for selected children')
-            messages.success(request, 'تمت طباعة بطاقات الأطفال بنجاح.')
-        else:
-            children = Child.objects.all()
-            print('printing cards for all children')
-            # html = HTML('http://weasyprint.org/').write_pdf('/tmp/weasyprint-website.pdf')
-            messages.success(request, 'تمت طباعة بطاقات الأطفال بنجاح.')
-
-    return redirect(reverse('orphanage:children'))
+from orphanage.utils import get_scholar_year
 
 
 class ChildCardPDF(PDFTemplateView):
 
     cmd_options = {
-        # 'page-size': 'A4',
         'page-width': '140',
         'page-height': '80',
-        'orientation': 'portrait',  # ''landscape',
+        'orientation': 'portrait',
         'margin-top': 0,
         'margin-bottom': 0,
         'margin-left': 0,
         'margin-right': 0,
     }
 
-    # filename = 'child_card.pdf'
     filename = None
 
     template_name = 'orphanage/pdf/child_card.html'
-    header_template = 'orphanage/pdf/header.html'
-    footer_template = 'orphanage/pdf/footer.html'
+
+    context = {}
 
     def get(self, request, *args, **kwargs):
 
-        context = {}
-
         if 'child_id' in kwargs:
-            child = Child.objects.get(pk=kwargs['child_id'])
-            context['child'] = child
+            children = Child.objects.filter(pk=kwargs['child_id'])
+            if not children:
+                raise Http404()
+            child_title = 'الطفل' if children[0].sex == 'm' else 'الطفلة'
+            messages.success(request, 'لقد تمت طباعة بطاقة ' + child_title + ' بنجاح.')
         else:
-            children = Child.objects.all()[:10]
-            context['children'] = children
+            if 'children_ids' in kwargs:
+                children = Child.objects.filter(id__in=kwargs['children_ids'])
+            else:
+                children = Child.objects.all()
+            messages.success(request, 'تمت طباعة بطاقات الأطفال بنجاح.')
 
-        response = PDFTemplateResponse(
-            request=request, template=self.template_name, filename=self.filename, context=context,
+        self.context['children'] = children
+        self.context['scholar_year'] = get_scholar_year(switch_month=6)
+
+        if request.GET.get('as', '') == 'html':
+            return TemplateResponse(
+                request=request, template=self.template_name, context=self.context,
+            )
+
+        return PDFTemplateResponse(
+            request=request, template=self.template_name, filename=self.filename, context=self.context,
             show_content_in_browser=False, cmd_options=self.cmd_options,
         )
-        return response

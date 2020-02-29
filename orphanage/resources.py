@@ -1,24 +1,27 @@
 from import_export import resources
-from import_export.fields import Field
 
 from orphanage.models import Child
 
 
 class ChildResources(resources.ModelResource):
 
-    full_name = Field(column_name='full_name')
-
     class Meta:
         model = Child
         skip_unchanged = True
         report_skipped = False
+
+        import_id_fields = ('subscription_id', )
+
         fields = [
-            'full_name', 'first_name', 'last_name', 'sex', 'grade', 'birthday', 'phone_number', 'village', 'weight', 'height',
-            'bed_position', 'shoo_size', 'vision', 'orphan_side', 'chronic_disease', 'hobby', 'status'
+            'subscription_id', 'first_name', 'last_name', 'full_name', 'sex', 'grade', 'birthday', 'phone_number', 'village',
+            'weight', 'height', 'bed_position', 'shoo_size', 'vision', 'orphan_side', 'chronic_disease', 'hobby',
+            'status', 'full_name'
         ]
+
         export_order = [
-            'first_name', 'last_name', 'full_name', 'sex', 'grade', 'birthday', 'phone_number', 'village', 'weight', 'height',
-            'bed_position', 'shoo_size', 'vision', 'orphan_side', 'chronic_disease', 'hobby', 'status'
+            'subscription_id', 'first_name', 'last_name', 'full_name', 'sex', 'grade', 'birthday', 'phone_number',
+            'village', 'weight', 'height', 'bed_position', 'shoo_size', 'vision', 'orphan_side', 'chronic_disease',
+            'hobby', 'status'
         ]
 
     def before_import_row(self, row, **kwargs):
@@ -26,8 +29,13 @@ class ChildResources(resources.ModelResource):
         if len(full_name) == 2:
             row['first_name'] = full_name[0]
             row['last_name'] = full_name[1]
-        else:
-            row['first_name'] = '? ' + row['full_name']
+        elif len(full_name) == 3:
+            if 'عبد' in full_name:
+                row['first_name'] = full_name[0] + ' ' + full_name[1]
+                row['last_name'] = full_name[2]
+            elif 'ايت' in full_name or 'أيت' in full_name:
+                row['first_name'] = full_name[0]
+                row['last_name'] = full_name[1] + ' ' + full_name[2]
 
         if row['sex'] == 'أ':
             row['sex'] = 'f'

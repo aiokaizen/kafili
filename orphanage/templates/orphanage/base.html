@@ -45,7 +45,7 @@
             <a class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" href="javascript:void(0);"><span class="feather-icon"><i data-feather="more-vertical"></i></span></a>
 			<a id="navbar_toggle_btn" class="navbar-toggle-btn nav-link-hover" href="javascript:void(0);"><span class="feather-icon"><i data-feather="menu"></i></span></a>
             <a class="navbar-brand" href="{% url 'orphanage:home' %}">
-                <img class="brand-img d-inline-block" src="{% static 'orphanage/dist/img/logo-dark.png' %}" alt="OMS" />
+                <img class="brand-img d-inline-block" style="width: 130px;" src="{% static 'orphanage/dist/img/logo-dark.png' %}" alt="OMS" />
             </a>
 			<ul class="navbar-nav hk-navbar-content order-xl-2">
                 <li class="nav-item dropdown dropdown-authentication">
@@ -63,9 +63,9 @@
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" data-dropdown-in="flipInX" data-dropdown-out="flipOutX">
-                        <a class="dropdown-item" href="{% url 'orphanage:profile' %}"><i class="dropdown-icon zmdi zmdi-account"></i><span>Profile</span></a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'orphanage:logout' %}"><i class="dropdown-icon zmdi zmdi-power"></i><span>Log out</span></a>
+{#                        <a class="dropdown-item" href="{% url 'orphanage:profile' %}"><i class="dropdown-icon zmdi zmdi-account"></i><span>Profile</span></a>#}
+{#                        <div class="dropdown-divider"></div>#}
+                        <a class="dropdown-item" href="{% url 'orphanage:logout' %}"><i class="dropdown-icon zmdi zmdi-power"></i><span>تسجيل الخروج</span></a>
                     </div>
                 </li>
             </ul>

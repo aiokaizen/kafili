@@ -1,7 +1,16 @@
 .rtl, p, h1, h2, h3, h4, h5, h6, span, input, a, li {
     text-align: right;
     justify-content: flex-end;
-    /*direction: rtl;*/
+}
+
+input, select {
+    direction: rtl;
+}
+
+.invalid-feedback {
+    display: initial;
+    font-size: 90%;
+    font-weight: bold;
 }
 
 .hk-pg-wrapper.hk-auth-wrapper .auth-form-wrap .auth-form .form-group .input-group-append {

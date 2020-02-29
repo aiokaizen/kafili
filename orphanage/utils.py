@@ -22,6 +22,7 @@
 #         uri += '/' + elt
 #         parents.append(Page(elt, uri))
 #     return parents
+from datetime import datetime
 
 
 class Page:
@@ -57,3 +58,13 @@ def get_page_parents(page, depth=0):
             index += 1
     parents.reverse()
     return parents
+
+
+def get_scholar_year(switch_month=6):
+    year = datetime.now().year
+    month = datetime.now().month
+
+    if month < switch_month:
+        year = year - 1
+
+    return f'{year}/{str(year + 1)[:2]}'

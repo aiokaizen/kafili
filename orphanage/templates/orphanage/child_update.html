@@ -24,9 +24,6 @@
                     إضافة تلميذ(ة)
                 {% endif %}
             </h4>
-            {% if form.errors %}
-                {{ form.errors }}
-            {% endif %}
         </div>
 
         <div class="container mt-3">
@@ -36,6 +33,18 @@
                     <div class="col-md-9 col-sm-12 basic-infos">
                         <div class="row">
                             <div class="col-sm">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="font-weight-bold" for="id_subscription_id">{{ form.subscription_id.label }}</label>
+                                        {{ form.subscription_id }}
+                                        {% if form.subscription_id.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.subscription_id.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label class="font-weight-bold" for="id_last_name">{{ form.last_name.label }}</label>
@@ -204,12 +213,15 @@
                                     </div>
                                 </div>
                                 <hr>
+                                <a class="btn btn-default font-weight-bold" href="{% if form.instance.id %}{%  url 'orphanage:child_details' form.instance.id %}{% else %}{%  url 'orphanage:children' %}{% endif %}">
+                                    إلغاء
+                                </a>
                                 <button class="btn btn-primary font-weight-bold" type="submit">{% if form.instance.id %}تحديث{% else %}إضافة{% endif %}</button>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 img_container">
-                        <img class="image" src="{% if form.instance.picture %}{{ form.instance.picture.url }}{% else %}/media/images/default/{% if form.instance.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ form.instance.full_name }}">
+                        <img class="image" src="{% if form.instance.picture %}{{ form.instance.picture.url }}{% else %}/static/orphanage/img/default/{% if form.instance.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ form.instance.full_name }}">
                         <div>
                             {{ form.picture }}
                             {% if form.picture.errors %}
@@ -234,9 +246,6 @@
 
     <script>
         let datepickers = $('input[role="datepicker"]');
-        let dates = [];
-        for (let i = 0; i < datepickers.length; i++)
-            dates.push($(datepickers[i]).val());
 
         datepickers.daterangepicker({
             "singleDatePicker": true,
@@ -244,15 +253,34 @@
             "locale": {
                 "format": "DD/MM/YYYY",
                 "separator": " - ",
+                "daysOfWeek": [
+                    "Lu",
+                    "Ma",
+                    "Me",
+                    "Je",
+                    "Ve",
+                    "Sa",
+                    "Di"
+                ],
+                "monthNames": [
+                    "Janvier",
+                    "Février",
+                    "Mars",
+                    "Avril",
+                    "Mai",
+                    "Juin",
+                    "Juillet",
+                    "Août",
+                    "Septembre",
+                    "Octobre",
+                    "Novembre",
+                    "Décembre"
+                ],
             },
-            "startDate": "01/01/2000",
+            "startDate": "{% if form.instance.id %}{{ form.instance.birthday|date:'d/m/Y' }}{% else %}01/01/2000{% endif %}",
             "endDate": parseInt(moment().format('YYYY'), 10),
             "opens": "left",
-        }, function(start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         });
-        for (let i = 0; i < datepickers.length; i++)
-            $(datepickers[i]).val(dates[i]);
     </script>
 
 {% endblock js %}

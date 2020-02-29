@@ -26,6 +26,7 @@ class ChildForm(ModelForm):
         model = Child
 
         fields = [
+            'subscription_id',
             'first_name',
             'last_name',
             'picture',
@@ -45,6 +46,7 @@ class ChildForm(ModelForm):
         ]
 
         widgets = {
+            'subscription_id': forms.NumberInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'picture': ImageWidget(),
@@ -63,14 +65,15 @@ class ChildForm(ModelForm):
             'status': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-    # def clean(self):
-    #     # cleaned_data = super(ChildForm, self).clean()
-    #     bd = self.data['birthday']
-    #     print('cleaning birthday - bd =', bd)
-    #     # try:
-    #     if True:
-    #         birthday = datetime.strptime(bd, '%d/%m/%Y')
-    #         print('birthday:', birthday)
-    #         return bd
-    #     # except:
-    #     #     return None
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        sub_id = self.cleaned_data.get('subscription_id')
+        count = len(Child.objects.filter(subscription_id=sub_id))
+        exists = True if (count > 1 and self.instance.id) or (count > 0 and not self.instance.id) else False
+        try:
+            if not sub_id or int(sub_id) < 1 or exists:
+                self.add_error('subscription_id', ".رقم الإنخراط يجب أن يكون رقما موجب. و أن يكون غير مكرر")
+        except ValueError:
+            self.add_error('subscription_id', ".رقم الإنخراط يجب أن يكون رقما موجب. و أن يكون غير مكرر")
+        return cleaned_data
+

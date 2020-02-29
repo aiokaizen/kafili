@@ -20,11 +20,13 @@
             <div class="row infos rtl">
                 <div class="col-md-9 col-sm-12 basic-infos">
                     <table class="rtl w-100 table-striped table-sm">
-                        <tr><td>{{ child.birthday|date:'d/m/Y'|default_if_none:'' }}</td>
+                        <tr><td>{{ child.subscription_id }}</td>
+                            <th style="width: 150px;">:رقم التسجيل بالمركب</th></tr>
+                        <tr><td>{{ child.birthday|date:'Y/m/d'|default_if_none:'' }}</td>
                             <th>:تاريخ الإزدياد</th></tr>
                         <tr><td>{{ child.phone_number|default_if_none:'' }}</td>
                             <th>:رقم الهاتف</th></tr>
-                        <tr><td>{{ child.village|default_if_none:'' }}</td>
+                        <tr><td>{{ child.get_address|default_if_none:'' }}</td>
                             <th>:الدوار</th></tr>
                         <tr><td>{{ child.weight|default_if_none:'' }} Kg</td>
                             <th>:الوزن</th></tr>
@@ -55,7 +57,7 @@
                     </table>
                 </div>
                 <div class="col-md-3 col-sm-12 img_container">
-                    <img class="image" src="{% if child.picture %}{{ child.picture.url }}{% else %}/media/images/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ child.full_name }}">
+                    <img class="image" src="{% if child.picture %}{{ child.picture.url }}{% else %}/static/orphanage/img/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ child.full_name }}">
                     <div>
                         <h3 class="text-center">{{ child.full_name }}</h3>
                         <h5 class="text-center">{{ child.grade }}المستوى </h5>
@@ -65,8 +67,33 @@
             <div class="row">
                 <div class="col-12 mt-2">
                     <a class="btn btn-secondary font-weight-bold" href="{% url 'orphanage:print_card' child.id %}" target="_blank">طباعة بطاقة التلميذ{% if child.sex == 'f' %}ة{% endif %}</a>
-                    <a class="btn btn-danger text-white font-weight-bold" onclick="show_delete_dialog()" >مسح البيانات</a>
+                    <a class="btn btn-danger text-white font-weight-bold" data-toggle="modal" data-target="#delete_confirmation_modal">
+                        مسح البيانات
+                    </a>
                     <a class="btn btn-primary font-weight-bold" href="{% url 'orphanage:child_update' child.id %}">تحديث البيانات</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{#    MODALS #}
+    <div class="modal fade rtl" style="direction: rtl;" id="delete_confirmation_modal" tabindex="-1" role="dialog" aria-labelledby="delete_confirmation_modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="delete_confirmation_modalLabel">هل أنت متأكد من مسح بيانات التلميذ(ة)</h5>
+                    <button type="button" class="close" style="margin: -1rem auto -1rem -1rem;" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-info" data-dismiss="modal">إلغاء</button>
+                        <input type="hidden" name="action" value="delete">
+                        <input type="submit" class="btn btn-danger" value="نعم">
+                    </form>
                 </div>
             </div>
         </div>
@@ -75,33 +102,6 @@
 
 {% block js %}
     <script>
-        let toasts = [];
-        function show_delete_dialog() {
-            show_dialog("هل تريد فعلا مسح المعلومات المتعلقة بهذا التلميذ؟", "تأكيد");
-        }
-        function show_dialog(message, title) {
 
-            let btn = '<br /><br /><button type="button" class="btn btn-danger ml-2" onclick="delete_child()">نعم</button><button type="button" class="btn btn-success" onclick="clear_toasts()">لا</button>';
-            toastr.options = {
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "timeOut": 10000,
-                "extendedTimeOut": 5000,
-                "tapToDismiss": false,
-                "rtl": true,
-            };
-
-            toasts.push(toastr.warning(message + btn, title));
-        }
-        function delete_child(){
-            console.log('deleting child infos');
-            clear_toasts();
-        }
-
-        function clear_toasts() {
-            for(let i = 0; i < toasts.length; i++) {
-                toastr.clear($(toasts[i]), {force: true});
-            }
-        }
     </script>
 {% endblock js %}

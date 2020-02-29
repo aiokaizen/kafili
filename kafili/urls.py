@@ -29,3 +29,6 @@ urlpatterns = [
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+handler404 = 'orphanage.views.handler_404'
+handler500 = 'orphanage.views.handler_500'
+handler403 = 'orphanage.views.handler_403'

@@ -62,22 +62,14 @@
                 <table class="table table-hover table-striped table-sm table-bordered children-table">
                     <thead class="thead-active">
                     <tr class="rtl">
-    {#                    <th scope="col">الحالة</th>#}
                         <th scope="col">الهواية</th>
-        {#                <th scope="col">مرض مزمن</th>#}
-    {#                    <th scope="col">اليتم</th>#}
-        {#                <th scope="col">الرؤية</th>#}
-        {#                <th scope="col">مقاس الحذاء</th>#}
-        {#                <th scope="col">تموضع السرير</th>#}
-        {#                <th scope="col">القامة</th>#}
-        {#                <th scope="col">الوزن</th>#}
                         <th scope="col">الدوار</th>
                         <th scope="col">رقم الهاتف</th>
                         <th scope="col">تاريخ الإزدياد</th>
                         <th scope="col">المستوى الدراسي</th>
                         <th scope="col">اللقب</th>
                         <th scope="col">الإسم</th>
-                        <th scope="col"></th>
+                        <th scope="col">الصورة</th>
                         <th scope="col">
                             <input type="checkbox" id="select_all">
                         </th>
@@ -86,27 +78,16 @@
                     <tbody>
                     {% for child in items %}
                         <tr class="rtl">
-    {#                        <td>{{ child.get_status_display|default_if_none:'' }}</td>#}
                             <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.hobby|default_if_none:'' }}</td>
-        {#                    <td>{{ child.chronic_disease|default_if_none:'' }}</td>#}
-    {#                        <td>{{ child.get_orphan_side_display|default_if_none:'' }}</td>#}
-        {#                    <td>{{ child.vision|default_if_none:'' }}</td>#}
-        {#                    <td>{{ child.shoo_size|default_if_none:'' }}</td>#}
-        {#                    <td>{{ child.bed_position|default_if_none:'' }}</td>#}
-        {#                    <td>{{ child.height|default_if_none:'' }}</td>#}
-        {#                    <td>{{ child.weight|default_if_none:'' }}</td>#}
                             <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.village|default_if_none:'' }}</td>
                             <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.phone_number|default_if_none:'' }}</td>
-                            <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.birthday|date:'d/m/Y'|default_if_none:'' }}</td>
+                            <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.birthday|date:'Y/m/d'|default_if_none:'' }}</td>
                             <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.grade|default_if_none:'' }}</td>
                             <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.last_name }}</td>
                             <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.first_name }}</td>
-                            <th onclick="location.href='{% url 'orphanage:child_details' child.id %}'"><img src="{% if child.picture %}{{ child.picture.url }}{% else %}/media/images/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}"></th>
+                            <th onclick="location.href='{% url 'orphanage:child_details' child.id %}'"><img src="{% if child.picture %}{{ child.picture.url }}{% else %}/static/orphanage/img/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}"></th>
                             <td>
-    {#                            <div class="custom-checkbox">#}
-    {#                                <input type="checkbox" class="custom-control-input" name="children" id="{{ child.id }}">#}
-                                    <input type="checkbox" class="child_select" name="children" value="{{ child.id }}">
-    {#                            </div>#}
+                                <input type="checkbox" class="child_select" name="children" value="{{ child.id }}">
                             </td>
                         </tr>
                     {% endfor %}

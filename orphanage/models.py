@@ -1,5 +1,12 @@
+import os
+
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.files import File
 from django.db import models
 from django.db.models import Q
+
+from kafili.settings import MEDIA_URL
 
 
 class Child(models.Model):
@@ -29,6 +36,8 @@ class Child(models.Model):
         ('dropped', 'منقطع'),
     )
 
+    # TODO: add this field in insert and update templates and forms
+    subscription_id = models.PositiveIntegerField('رقم الإنخراط', unique=True, null=True, blank=True)
     first_name = models.CharField('الإسم', max_length=255)
     last_name = models.CharField('اللقب', max_length=255)
     full_name = models.CharField('الإسم الكامل', max_length=255, null=True, blank=True)
@@ -50,10 +59,13 @@ class Child(models.Model):
 
     # Functions
     def __str__(self):
-        return self.full_name
+        return self.full_name if self.full_name else ''
 
-    def delete(self, using=None, keep_parents=False):
-        self.delete()
+    def get_short_address(self):
+        return 'دوار ' + self.village + '، جماعة زرقطن' if self.village else ''
+
+    def get_address(self):
+        return 'دوار ' + self.village + '، جماعة زرقطن، قيادة التوامة، عمالة تاحناوت' if self.village else ''
 
     def update_full_name(self):
         self.full_name = self.first_name + ' ' + self.last_name
@@ -71,3 +83,43 @@ class Child(models.Model):
             filters &= Q(id__in=ids)
 
         return cls.objects.filter(filters)
+
+    @classmethod
+    def import_photos(cls):
+        children = cls.objects.all()
+
+        basedir = settings.BASE_DIR
+        path = basedir + f'{MEDIA_URL}images/children'
+        if not os.path.exists(path):
+            os.mkdir(path)
+        not_imported = []
+        success_import_count = 0
+
+        for img in os.listdir(path):
+            try:
+                value = img.split('.')[0]
+
+                if not value.isdigit():
+                    continue
+                child = children.get(id=value)
+                if not child.picture or 1:
+                    img_path = f'images/children/{img}'
+                    child.picture = img_path
+                    child.save(update_fields=['picture', ])
+                    print(child)
+                    success_import_count += 1
+
+            except ObjectDoesNotExist:
+                not_imported.append(img)
+
+        err_message = ''
+        if not_imported:
+            non_importees = ''
+            for img in not_imported:
+                non_importees += img + '; '
+            err_message = ('warning', f'({len(not_imported)}/{len(os.listdir(path))})',
+                           f'Images were not imported: {non_importees}')
+
+        message = ('success', f"{success_import_count} images were imported.")
+        return True, [message, err_message]
+

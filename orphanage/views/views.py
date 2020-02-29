@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import logout as django_logout
 
+from kafili.settings import TABLE_MAX_ITEMS
 from orphanage.forms import ConnectionForm, ChildForm
 from orphanage.models import Child
 
@@ -63,10 +64,9 @@ def children(request):
 
     if request.method == 'POST':
         if request.POST['action'] == 'print':
-            # return print_cards(request)
             pass
 
-    number_per_page = 20
+    number_per_page = TABLE_MAX_ITEMS
     next_page = None
     previous_page = None
 
@@ -108,14 +108,12 @@ def child_details(request, child_id):
     if request.method == 'POST':
         if request.POST['action'] == 'delete':
             child.delete()
+            return redirect(reverse('orphanage:children'))
 
     context = {
         'child': child,
         'page_title': 'Child details'
     }
-
-    # from weasyprint import HTML
-    # HTML(request.get_full_path()).write_pdf('/tmp/weasyprint-website.pdf')
 
     return render(request, 'orphanage/child_details.html', context)
 
@@ -123,7 +121,17 @@ def child_details(request, child_id):
 @login_required
 def child_insert(request):
     
-    form = ChildForm()
+    if request.method == 'POST':
+        form = ChildForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.instance.birthday = form.cleaned_data['birthday']
+            form.instance.save()
+            child_title = 'الطفل' if form.instance.sex == 'm' else 'الطفلة'
+            messages.success(request, 'تمت إضافة ' + child_title + ' بنجاح.')
+            return redirect(reverse('orphanage:child_details', args=[form.instance.id]))
+        messages.error(request, 'المرجو مراجعة بيانات التلميذ(ة)')
+    else:
+        form = ChildForm()
 
     context = {
         'form': form,
