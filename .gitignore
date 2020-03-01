@@ -1,8 +1,6 @@
 /assets
-/setenv.*
 __pycache__
 /.idea
 *.pyc
 /media
 /static
-/*.sqlite3
