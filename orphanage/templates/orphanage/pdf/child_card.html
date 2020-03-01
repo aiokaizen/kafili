@@ -91,7 +91,7 @@
             </div>
             <div class="content">
                 <div class="img">
-                    <img style="width: 100%;" src="{% if child.picture %}{{ child.picture.url }}{% else %}/static/orphanage/img/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="">
+                    <img style="max-height: 144px;" src="{% if child.picture %}{{ child.picture.url }}{% else %}/static/orphanage/img/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="">
                     <h2 class="text-center m-0">{{ child.subscription_id }}</h2>
                 </div>
                 <div class="infos">
