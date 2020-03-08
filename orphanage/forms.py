@@ -19,7 +19,7 @@ class ConnectionForm(forms.Form):
 
 class ChildForm(ModelForm):
 
-    birthday = forms.DateField(input_formats=['%d/%m/%Y', ],
+    birthday = forms.DateField(label='تاريخ الإزدياد', input_formats=['%d/%m/%Y', ],
                                widget=DateWidget(format='%d/%m/%Y', attrs={'class': 'form-control'}))
 
     class Meta:

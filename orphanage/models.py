@@ -1,8 +1,7 @@
 import os
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.core.files import File
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 
@@ -70,6 +69,11 @@ class Child(models.Model):
     def update_full_name(self):
         self.full_name = self.first_name + ' ' + self.last_name
         self.save(update_fields=['full_name', ])
+
+    # def save(self, *args, **kwargs):
+    #     if self.full_name != self.first_name + ' ' + self.last_name:
+    #         self.update_full_name()
+    #     super(Child, self).save(*args, **kwargs)
 
     @classmethod
     def list(cls, **kwargs):
