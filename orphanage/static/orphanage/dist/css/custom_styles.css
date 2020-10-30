@@ -91,3 +91,19 @@ table.children-table tbody tr:hover {
 .link-with-badge i {
     margin-left: 10px;
 }
+
+.navbar-nav .nav-item .nav-link {
+    font-size: 15px;
+    font-weight: bold;
+}
+.navbar-nav .nav-item .nav-link span {
+    padding-top: 3px;
+}
+.navbar-nav .nav-item .nav-link span,
+.navbar-nav .nav-item .nav-link i {
+    color: #ddd;
+}
+.navbar-nav .nav-item .nav-link:hover span,
+.navbar-nav .nav-item .nav-link:hover i {
+    color: #fff;
+}

@@ -72,7 +72,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'orphanage.context_processors.breadcrumbs_processor',
+                'orphanage.context_processors.main_context',
             ],
         },
     },
@@ -150,10 +150,6 @@ DATE_INPUT_FORMATS = [
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
-
-TABLE_MAX_ITEMS = 10
-
-BREADCRUMBS_DEPTH_LEVEL = 2
 
 # ----------------------------------
 # Importing from local_settings.py |

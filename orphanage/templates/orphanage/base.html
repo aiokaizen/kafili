@@ -48,6 +48,18 @@
                 <img class="brand-img d-inline-block" style="width: 130px;" src="{% static 'orphanage/dist/img/logo-dark.png' %}" alt="OMS" />
             </a>
 			<ul class="navbar-nav hk-navbar-content order-xl-2">
+                <li>
+                    <div class="dropdown">
+                        <button aria-expanded="false" data-toggle="dropdown" class="btn btn-light dropdown-toggle" type="button">
+                            {{ current_year }} <span class="caret"></span>
+                        </button>
+                        <div role="menu" class="dropdown-menu" style="will-change: transform;">
+                            {% for year in years %}
+                                <a class="dropdown-item" href="{% url 'orphanage:year_switch' year.year %}">{{ year }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </li>
                 <li class="nav-item dropdown dropdown-authentication">
                     <a class="nav-link dropdown-toggle no-caret" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="media">
@@ -83,17 +95,35 @@
 {#                        <span>O</span>#}
 {#                    </div>#}
                     <ul class="navbar-nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:children' %}">
-                                <span class="nav-link-text">لائحة الأطفال</span>
-                                <i class="ion ion-md-list"></i>
-{#                                <span class="badge badge-success badge-pill">Hot</span>#}
-                            </a>
-                        </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:child_insert' %}">
                                 <span class="nav-link-text">إضافة طفل</span>
                                 <i class="ion ion-md-add"></i>
+                            </a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:children' %}">
+                                <span class="nav-link-text">لائحة الأطفال</span>
+                                <i class="fa fa-users"></i>
+{#                                <span class="badge badge-success badge-pill">Hot</span>#}
+                            </a>
+                        </li>
+                        {# <li class="nav-item"> #}
+                        {#     <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:children' %}"> #}
+                        {#         <span class="nav-link-text">لائحة الكفلاء</span> #}
+                        {#         <i class="ion ion-md-list"></i> #}
+                        {#     </a> #}
+                        {# </li> #}
+                        <li class="nav-item">
+                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:grades' %}">
+                                <span class="nav-link-text">لائحة المستويات الدراسية</span>
+                                <i class="fa fa-graduation-cap"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:year_details' %}">
+                                <span class="nav-link-text">السنة الدراسية</span>
+                                <i class="fa fa-calendar"></i>
                             </a>
                         </li>
                     </ul>

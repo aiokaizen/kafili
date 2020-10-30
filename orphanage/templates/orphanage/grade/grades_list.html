@@ -1,0 +1,83 @@
+{% extends 'orphanage/base.html' %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <!-- Data Table CSS -->
+    <link href="{% static 'orphanage/vendors/datatables.net-dt/css/jquery.dataTables.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'orphanage/vendors/datatables.net-responsive-dt/css/responsive.dataTables.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock stylesheets %}
+
+{% block main %}
+    <div class="page-content">
+        <div class="hk-pg-header pt-4 mb-0">
+            
+            <h4 class="hk-pg-title rtl font-weight-bold w-100 justify-content-end pr-4 pt-2 pb-0">
+                لائحة المستويات الدراسية
+            </h4>
+        </div>
+
+        <div class="hk-sec-wrapper m-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div class="btn-toolbar d-inline-block mb-25 mr-10" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                            <a class="btn btn-outline-light" href="{% url 'orphanage:grade_insert' %}" title="إضافة مستوى دراسي">
+                                <i class="icon-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div id="datable_1_filter" class="dataTables_filter d-flex justify-content-end">
+                        <form action="">
+                            <label>
+                                <input type="search" onkeydown="search()" name="name" class="form-control form-control-sm" placeholder="بحث" aria-controls="datable_1">
+                                <input type="submit" class="d-none">
+                            </label>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-hover table-striped table-sm table-bordered grades-table">
+                <thead class="thead-active">
+                <tr class="rtl">
+                    <th scope="col">عدد التلاميذ</th>
+                    <th scope="col">الإسم</th>
+                    <th scope="col" style="width: 30px;">
+                        <input type="checkbox" id="select_all">
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for grade in items %}
+                    <tr class="rtl">
+                        <td>{{ grade.get_children_count }}</td>
+                        <th><a href="{% url 'orphanage:grade_details' grade.id %}">{{ grade.title }}</a></th>
+                        <td>
+                            <input type="checkbox" class="grade_select" name="grades" value="{{ grade.id }}">
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% include 'orphanage/includes/pagination.html' %}
+        </div>
+
+    </div>
+    <!-- /Main Content -->
+{% endblock main %}
+
+{% block js %}
+    <script>
+        // select all checkboxes
+        $('#select_all').click(function() {
+            let check_boxes = $('.grade_select');
+            if ($(this).is(':checked')) {
+                check_boxes.attr('checked', true);
+            } else {
+                check_boxes.attr('checked', false);
+            }
+        });
+    </script>
+{% endblock js %}

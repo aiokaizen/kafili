@@ -10,6 +10,7 @@
 {% block main %}
     <div class="page-content">
         <div class="hk-pg-header pt-4 mb-0">
+            
             <h4 class="hk-pg-title rtl font-weight-bold w-100 justify-content-end pr-4 pt-2 pb-0">
                 لائحة الأطفال
             </h4>
@@ -30,16 +31,14 @@
     {#                            </select> عدد الأسطر في الصفحة#}
     {#                        </label>#}
     {#                    </div>#}
-    {#                    <div class="actions">#}
-    {#                        <a class="btn-sm btn-primary font-weight-bold" href="{% url 'orphanage:print_cards' %}">طباعة البطاقات</a>#}
-    {#                    </div>#}
                         <div class="btn-toolbar d-inline-block mb-25 mr-10" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group mr-2" role="group" aria-label="First group">
-{#                                <a  class="btn btn-outline-light" onclick="print()" title="طباعة البطاقات"><i class="icon-printer"></i></a>#}
                                 <a  class="btn btn-outline-light" href="{% url 'orphanage:print_cards' %}" target="_blank" title="طباعة البطاقات">
                                     <i class="icon-printer"></i>
                                 </a>
-    {#                            <button type="button" class="btn btn-outline-light"><i class="icon-list"></i></button>#}
+                                <a class="btn btn-outline-light" href="{% url 'orphanage:child_insert' %}" title="إضافة طفل">
+                                    <i class="icon-plus"></i>
+                                </a>
     {#                            <button type="button" class="btn btn-outline-light"><i class="icon-menu"></i></button>#}
     {#                            <button type="button" class="btn btn-outline-light"><i class="icon-login"></i></button>#}
                             </div>
@@ -84,7 +83,7 @@
                             <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.birthday|date:'Y/m/d'|default_if_none:'' }}</td>
                             <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.grade|default_if_none:'' }}</td>
                             <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.last_name }}</td>
-                            <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.first_name }}</td>
+                            <td onclick="location.href='{% url 'orphanage:child_details' child.id %}'">{{ child.full_name }}</td>
                             <th onclick="location.href='{% url 'orphanage:child_details' child.id %}'"><img src="{% if child.picture %}{{ child.picture.url }}{% else %}/static/orphanage/img/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}"></th>
                             <td>
                                 <input type="checkbox" class="child_select" name="children" value="{{ child.id }}">

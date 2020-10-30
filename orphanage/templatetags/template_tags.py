@@ -1,14 +1,10 @@
 from django import template
 
-from kafili.local_settings import BREADCRUMBS_DEPTH_LEVEL
+from orphanage import settings as orphanage_settings
 from orphanage.breadcrumbs import get_page
 from orphanage.utils import get_page_parents as get_parents
 
 register = template.Library()
-
-
-def in_range_3(current, index):
-    return in_range(current, index, 3)
 
 
 def in_range(current, index, range):
@@ -20,9 +16,15 @@ def in_range(current, index, range):
     return True
 
 
+@register.filter()
+def in_range_3(current, index):
+    return in_range(current, index, 3)
+
+
+@register.filter()
 def get_breadcrumbs(page_title, path):
     page = get_page(page_title)
-    depth = BREADCRUMBS_DEPTH_LEVEL
+    depth = orphanage_settings.BREADCRUMBS_DEPTH_LEVEL
     if page:
         parents = get_parents(page)
         parent_url = ''
@@ -37,7 +39,3 @@ def get_breadcrumbs(page_title, path):
         return parents, page.label
 
     return [], page_title
-
-
-register.filter('in_range_3', in_range_3)
-register.filter('get_breadcrumbs', get_breadcrumbs)

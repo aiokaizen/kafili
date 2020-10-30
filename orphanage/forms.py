@@ -3,7 +3,7 @@ from datetime import datetime
 from django import forms
 from django.forms import ModelForm
 
-from orphanage.models import Child
+from orphanage.models import Child, Grade, Year
 from orphanage.widgets import DateWidget, ImageWidget
 
 
@@ -77,3 +77,22 @@ class ChildForm(ModelForm):
             self.add_error('subscription_id', ".رقم الإنخراط يجب أن يكون رقما موجب. و أن يكون غير مكرر")
         return cleaned_data
 
+
+class GradeForm(ModelForm):
+
+    class Meta:
+        model = Grade
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+class YearForm(ModelForm):
+
+    class Meta:
+        model = Year
+        fields = '__all__'
+        widgets = {
+            'year': forms.NumberInput(attrs={'class': 'form-control'}),
+        }

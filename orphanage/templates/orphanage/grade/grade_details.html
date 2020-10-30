@@ -1,0 +1,69 @@
+{% extends 'orphanage/base.html' %}
+
+{% block stylesheets %}
+    <style>
+        img {
+            width: 100%;
+        }
+    </style>
+{% endblock stylesheets %}
+
+{% block  main %}
+    <div class="page-content">
+        <div class="hk-pg-header mb-0">
+            <h4 class="hk-pg-title rtl font-weight-bold w-100 justify-content-end pr-4 pt-2 pb-0">
+                المعلومات الخاصة بالمستوى {{ grade }}
+            </h4>
+        </div>
+
+        <div class="container mt-3">
+            <div class="row infos rtl">
+                <div class="col-sm-12 basic-infos">
+                    <table class="rtl w-100 table-striped table-sm">
+                        <tr>
+                            <td>{{ grade.title }}</td>
+                            <th style="width: 150px;">:المستوى</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-2">
+                    <a class="btn btn-danger text-white font-weight-bold" data-toggle="modal" data-target="#delete_confirmation_modal">
+                        مسح البيانات
+                    </a>
+                    <a class="btn btn-primary font-weight-bold" href="{% url 'orphanage:grade_update' grade.id %}">تحديث البيانات</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{#    MODALS #}
+    <div class="modal fade rtl" style="direction: rtl;" id="delete_confirmation_modal" tabindex="-1" role="dialog" aria-labelledby="delete_confirmation_modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="delete_confirmation_modalLabel">هل أنت متأكد من مسح بيانات التلميذ(ة)</h5>
+                    <button type="button" class="close" style="margin: -1rem auto -1rem -1rem;" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-info" data-dismiss="modal">إلغاء</button>
+                        <input type="hidden" name="action" value="delete">
+                        <input type="submit" class="btn btn-danger" value="نعم">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
+{% block js %}
+    <script>
+
+    </script>
+{% endblock js %}
