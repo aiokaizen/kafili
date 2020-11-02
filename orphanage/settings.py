@@ -9,7 +9,9 @@ BREADCRUMBS_DEPTH_LEVEL = getattr(settings, 'BREADCRUMBS_DEPTH_LEVEL', 3)
 
 GUARDIAN_STATUS_CHOICES = getattr(settings, 'GUARDIAN_STATUS_CHOICES', (
     ('', 'إختر من القائمة'),
-    ('', '')
+    ('pending', 'في إنتظار الموافقة'),
+    ('accepted', 'طلب مقبول'),
+    ('accepted', 'طلب مرفوض'),
 ))
 
 

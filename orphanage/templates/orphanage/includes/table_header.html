@@ -1,0 +1,55 @@
+{% load template_tags %}
+
+<div class="row mb-2">
+    <div class="col-sm-12 col-md-5">
+        <div class="search-container d-flex w-100">
+            <button type="button" class="btn btn-outline-secondary mr-1" data-toggle="modal"
+                data-target="#filter_modal">
+                <i class="ft-filter"></i> فلتر
+            </button>
+            <form action="" class="w-100">
+                <input type="search" name="s_query" value="{{ request.GET.s_query }}" style="line-height: 1em;" class="form-control" placeholder="بحث">
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-7">
+        <div class="d-flex align-items-center justify-content-end">
+            إظهار
+            <select name="items-per-page" style="width: 100px;" class="form-control mx-1">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            عنصر
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="modal fade text-left" id="filter_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel35"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="myModalLabel35">خيارات التصفية</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <!-- <table> -->
+                                {{ filter_form }}
+                            <!-- </table> -->
+                        </div>
+                        <div class="modal-footer">
+                            <input type="reset" class="btn btn-outline-secondary btn-lg" data-dismiss="modal" value="إلغاء">
+                            <input type="submit" class="btn btn-outline-primary btn-lg" value="فلتر">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

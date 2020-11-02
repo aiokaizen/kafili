@@ -16,21 +16,13 @@
                 </li>
             {% endif %}
 
-            {% if range|length > 6 and items.number > 4 %}
-                <li class="page-item pagination-dots">...</li>
-            {% endif %}
-
             {% for index in range %}
                 {% if index == items.number %}
                     <li class="page-item active"><a class="page-link">{{ index }}</a></li>
-                {% elif items.number|in_range_3:index %}
+                {% elif items.number|in_range_2:index %}
                     <li class="page-item"><a class="page-link" href="{{ request.path }}?page={{ index }}">{{ index }}</a></li>
                 {% endif %}
             {% endfor %}
-
-            {% if range|length > 6 and items.number < range|length|add:"-3" %}
-                <li class="page-item pagination-dots">...</li>
-            {% endif %}
 
             {% if next_page %}
                 <li class="page-item">

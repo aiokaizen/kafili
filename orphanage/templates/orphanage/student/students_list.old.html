@@ -1,0 +1,124 @@
+{% extends 'orphanage/base.html' %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <!-- Data Table CSS -->
+    <link href="{% static 'orphanage/vendors/datatables.net-dt/css/jquery.dataTables.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'orphanage/vendors/datatables.net-responsive-dt/css/responsive.dataTables.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock stylesheets %}
+
+{% block content_body %}
+    <div class="page-content">
+        <div class="hk-pg-header pt-4 mb-0">
+            
+            <h4 class="hk-pg-title rtl font-weight-bold w-100 justify-content-end pr-4 pt-2 pb-0">
+                لائحة الأطفال
+            </h4>
+        </div>
+
+        <div class="hk-sec-wrapper m-3">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+    {#                    <div class="dataTables_length" id="datable_1_length">#}
+    {#                        <label class="w-100 d-flex justify-content-start align-items-center">#}
+    {#                            <select name="datable_1_length"#}
+    {#                                    aria-controls="datable_1"#}
+    {#                                    class="custom-select custom-select-sm form-control form-control-sm w-25 mr-2">#}
+    {#                                <option value="10">10</option>#}
+    {#                                <option value="25">25</option>#}
+    {#                                <option value="50">50</option>#}
+    {#                                <option value="100">100</option>#}
+    {#                            </select> عدد الأسطر في الصفحة#}
+    {#                        </label>#}
+    {#                    </div>#}
+                        <div class="btn-toolbar d-inline-block mb-25 mr-10" role="toolbar" aria-label="Toolbar with button groups">
+                            <div class="btn-group mr-2" role="group" aria-label="First group">
+                                <a  class="btn btn-outline-light" href="{% url 'orphanage:print_cards' %}" target="_blank" title="طباعة البطاقات">
+                                    <i class="icon-printer"></i>
+                                </a>
+                                <a class="btn btn-outline-light" href="{% url 'orphanage:student_insert' %}" title="إضافة طفل">
+                                    <i class="icon-plus"></i>
+                                </a>
+    {#                            <button type="button" class="btn btn-outline-light"><i class="icon-menu"></i></button>#}
+    {#                            <button type="button" class="btn btn-outline-light"><i class="icon-login"></i></button>#}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div id="datable_1_filter" class="dataTables_filter d-flex justify-content-end">
+                            <form action="">
+                                <label>
+                                    <input type="search" onkeydown="search()" name="name" class="form-control form-control-sm" placeholder="بحث" aria-controls="datable_1">
+                                    <input type="submit" class="d-none">
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            <form action="" method="POST" id="students_form">
+                {% csrf_token %}
+                <table class="table table-hover table-striped table-sm table-bordered students-table">
+                    <thead class="thead-active">
+                    <tr class="rtl">
+                        <th scope="col">الهواية</th>
+                        <th scope="col">الدوار</th>
+                        <th scope="col">رقم الهاتف</th>
+                        <th scope="col">تاريخ الإزدياد</th>
+                        <th scope="col">المستوى الدراسي</th>
+                        <th scope="col">اللقب</th>
+                        <th scope="col">الإسم</th>
+                        <th scope="col">الصورة</th>
+                        <th scope="col">
+                            <input type="checkbox" id="select_all">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for student in items %}
+                        <tr class="rtl">
+                            <td onclick="location.href='{% url 'orphanage:student_details' student.id %}'">{{ student.hobby|default_if_none:'' }}</td>
+                            <td onclick="location.href='{% url 'orphanage:student_details' student.id %}'">{{ student.village|default_if_none:'' }}</td>
+                            <td onclick="location.href='{% url 'orphanage:student_details' student.id %}'">{{ student.phone_number|default_if_none:'' }}</td>
+                            <td onclick="location.href='{% url 'orphanage:student_details' student.id %}'">{{ student.birthday|date:'Y/m/d'|default_if_none:'' }}</td>
+                            <td onclick="location.href='{% url 'orphanage:student_details' student.id %}'">{{ student.grade|default_if_none:'' }}</td>
+                            <td onclick="location.href='{% url 'orphanage:student_details' student.id %}'">{{ student.last_name }}</td>
+                            <td onclick="location.href='{% url 'orphanage:student_details' student.id %}'">{{ student.full_name }}</td>
+                            <th onclick="location.href='{% url 'orphanage:student_details' student.id %}'"><img src="{% if student.picture %}{{ student.picture.url }}{% else %}/static/orphanage/img/default/{% if student.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}"></th>
+                            <td>
+                                <input type="checkbox" class="student_select" name="students" value="{{ student.id }}">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+            {% include 'orphanage/includes/pagination.html' %}
+        </div>
+
+    </div>
+    <!-- /Main Content -->
+{% endblock content_body %}
+
+{% block js %}
+    <script>
+        // select all checkboxes
+        $('#select_all').click(function() {
+            let check_boxes = $('.student_select');
+            if ($(this).is(':checked')) {
+                check_boxes.attr('checked', true);
+            } else {
+                check_boxes.attr('checked', false);
+            }
+        });
+    </script>
+
+    <script>
+        // print students's cards
+        function print() {
+            let form = $('#students_form');
+            form.append('<input type="hidden" name="action" value="print">');
+            form.submit();
+        }
+    </script>
+{% endblock js %}

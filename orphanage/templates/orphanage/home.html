@@ -1,34 +1,84 @@
 {% extends 'orphanage/base.html' %}
 {% load staticfiles %}
 
-{#{% block stylesheets %}#}
+{% block content_header %}
+<!-- <div class="content-header-left col-md-6 col-12 mb-1">
+  <h3 class="content-header-title font-weight-bold">{{ page_title_ar }}</h3>
+</div> -->
+{% endblock content_header %}
 
-{#{% endblock stylesheets %}#}
-
-{% block main %}
-    <!-- Main Content -->
-    <div class="page-content">
-        <div class="hk-pg-header pt-4 mb-0">
-            <h4 class="hk-pg-title rtl font-weight-bold w-100 justify-content-end pr-4 pt-2 pb-0">
-                الصفحة الرئيسية
-            </h4>
-        </div>
-
-        <div class="hk-sec-wrapper m-3">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="ar-boxes">
-                        <div class="ar-link-box cgreen"> <!-- bbr: border-bottom-blue -->
-                            <a class="font-lg-20" href="{% url 'orphanage:children' %}">قائمة الأطفال</a>
+{% block content_body %}
+<div class="row main-stats">
+    <div class="col-xl-3 col-lg-6 col-12">
+        <div class="card">
+            <div class="card-content">
+                <a href="{% url 'orphanage:students' %}" class="text-white">
+                    <div class="media align-items-stretch">
+                        <div class="p-2 text-center bg-primary bg-darken-2">
+                            <i class="ft-users font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 bg-gradient-x-primary white media-body">
+                            <h2>التلاميذ</h2>
+                            <h3 class="text-bold-400 mb-0">{{ students_count }}</h3>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
-
     </div>
-    <!-- /Main Content -->
-{% endblock main %}
+    <div class="col-xl-3 col-lg-6 col-12">
+        <div class="card">
+            <div class="card-content">
+                <a href="{% url 'orphanage:grades' %}" class="text-white">
+                    <div class="media align-items-stretch">
+                        <div class="p-2 text-center bg-danger bg-darken-2">
+                            <i class="ft-layers font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 bg-gradient-x-danger white media-body">
+                            <h2>المستويات</h2>
+                            <h3 class="text-bold-400 mb-0">{{ grades_count }}</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-12">
+        <div class="card">
+            <div class="card-content">
+                <a href="#{#% url 'orphanage:subjects' %#}" class="text-white">
+                    <div class="media align-items-stretch">
+                        <div class="p-2 text-center bg-warning bg-darken-2">
+                            <i class="ft-book font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 bg-gradient-x-warning white media-body">
+                            <h2>المواد</h2>
+                            <h3 class="text-bold-400 mb-0">{{ subjects_count }}</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-12">
+        <div class="card">
+            <div class="card-content">
+                <a href="#{#% url 'orphanage:guardians' %#}" class="text-white">
+                    <div class="media align-items-stretch">
+                        <div class="p-2 text-center bg-success bg-darken-2">
+                            <i class="ft-shield font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 bg-gradient-x-success white media-body">
+                            <h2>الكفلاء</h2>
+                            <h3 class="text-bold-400 mb-0">{{ guardians_count }}</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content_body %}
 
 {% block js %}
 {% endblock js %}

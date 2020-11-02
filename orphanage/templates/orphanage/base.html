@@ -1,244 +1,302 @@
 {% load staticfiles template_tags %}
+<!-- - var menuBorder = true-->
 <!DOCTYPE html>
-<html lang="en">
+<html class="loading" lang="en" data-textdirection="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <title>{{ page_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta name="description"
+    content="Stack admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+  <meta name="keywords"
+    content="admin template, stack admin template, dashboard template, flat admin template, responsive admin template, web app">
+  <meta name="author" content="PIXINVENT">
+  <title>{% if page_title %}{{ page_title }}{% else %}Kafili - Orphanage management system{% endif %}</title>
+  <link rel="apple-touch-icon" href="{% static 'orphanage/app-assets/images/ico/apple-icon-120.png' %}">
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'orphanage/app-assets/images/ico/favicon.ico' %}">
+  <link
+    href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i"
+    rel="stylesheet">
+  
+    <!-- BEGIN VENDOR CSS-->
+  <link rel="stylesheet" type="text/css" href="{% static 'orphanage/app-assets/css-rtl/vendors.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'orphanage/app-assets/vendors/css/extensions/toastr.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'orphanage/app-assets/css-rtl/plugins/extensions/toastr.css' %}">
+  <!-- END VENDOR CSS-->
+  
+  <!-- BEGIN STACK CSS-->
+  <link rel="stylesheet" type="text/css" href="{% static 'orphanage/app-assets/css-rtl/app.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'orphanage/app-assets/css-rtl/custom-rtl.css' %}">
+  <!-- END STACK CSS-->
+  
+  <!-- BEGIN Page Level CSS-->
+  <link rel="stylesheet" type="text/css"
+    href="{% static 'orphanage/app-assets/css-rtl/core/menu/menu-types/vertical-menu-modern.css' %}">
+  <link rel="stylesheet" type="text/css"
+    href="{% static 'orphanage/app-assets/css-rtl/core/colors/palette-gradient.css' %}">
+  <!-- END Page Level CSS-->
+  
+  <!-- BEGIN Custom CSS-->
+  <link rel="stylesheet" type="text/css" href="{% static 'orphanage/assets/css/style-rtl.css' %}">
+  <!-- END Custom CSS-->
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>dashgrin I CRM Dashboard</title>
-    <meta name="description" content="A responsive bootstrap 4 admin dashboard template by hencework" />
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-	<!-- vector map CSS -->
-    <link href="{% static 'orphanage/vendors/vectormap/jquery-jvectormap-2.0.3.css' %}" rel="stylesheet" type="text/css" />
-
-    <!-- Toggles CSS -->
-    <link href="{% static 'orphanage/vendors/jquery-toggles/css/toggles.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'orphanage/vendors/jquery-toggles/css/themes/toggles-light.css' %}" rel="stylesheet" type="text/css">
-
-	<!-- Morris Charts CSS -->
-    <link href="{% static 'orphanage/vendors/morris.js/morris.css' %}" rel="stylesheet" type="text/css" />
-
-	<!-- Toastr CSS -->
-    <link href="{% static 'orphanage/vendors/jquery-toast-plugin/dist/jquery.toast.min.css' %}" rel="stylesheet" type="text/css">
-
-    <!-- Custom CSS -->
-    <link href="{% static 'orphanage/dist/css/style.css' %}" rel="stylesheet" type="text/css">
-
-    <!-- Basic CSS -->
-    <link href="{% static 'orphanage/dist/css/basic_styles.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'orphanage/dist/css/custom_styles.css' %}" rel="stylesheet" type="text/css">
-
-    {% block stylesheets %}
-    {% endblock stylesheets %}
+  <!-- BEGIN PAGE STYLE -->
+  {% block extra_css %}
+  {% endblock extra_css %}
+  <!-- END PAGE STYLE -->
 </head>
-<body>
-    <!-- HK Wrapper -->
-	<div class="hk-wrapper hk-vertical-nav">
 
-        <!-- Top Navbar -->
-        <nav class="navbar navbar-expand-xl navbar-dark fixed-top hk-navbar">
-            <a class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" href="javascript:void(0);"><span class="feather-icon"><i data-feather="more-vertical"></i></span></a>
-			<a id="navbar_toggle_btn" class="navbar-toggle-btn nav-link-hover" href="javascript:void(0);"><span class="feather-icon"><i data-feather="menu"></i></span></a>
+<body class="vertical-layout vertical-menu-modern 2-columns   menu-expanded fixed-navbar" data-open="click"
+  data-menu="vertical-menu-modern" data-col="2-columns">
+  <!-- fixed-top-->
+  <nav class="header-navbar navbar-expand-md navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
+    <div class="navbar-wrapper">
+      <div class="navbar-header">
+        <ul class="nav navbar-nav flex-row position-relative">
+          <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs"
+              href="#"><i class="ft-menu font-large-1"></i></a></li>
+          <li class="nav-item mr-auto">
             <a class="navbar-brand" href="{% url 'orphanage:home' %}">
-                <img class="brand-img d-inline-block" style="width: 130px;" src="{% static 'orphanage/dist/img/logo-dark.png' %}" alt="OMS" />
+              <img class="brand-logo" alt="stack admin logo"
+                src="{% static 'orphanage/app-assets/images/logo/stack-logo-light.png' %}">
+              <h2 class="brand-text">Stack</h2>
             </a>
-			<ul class="navbar-nav hk-navbar-content order-xl-2">
-                <li>
-                    <div class="dropdown">
-                        <button aria-expanded="false" data-toggle="dropdown" class="btn btn-light dropdown-toggle" type="button">
-                            {{ current_year }} <span class="caret"></span>
-                        </button>
-                        <div role="menu" class="dropdown-menu" style="will-change: transform;">
-                            {% for year in years %}
-                                <a class="dropdown-item" href="{% url 'orphanage:year_switch' year.year %}">{{ year }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item dropdown dropdown-authentication">
-                    <a class="nav-link dropdown-toggle no-caret" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <div class="media">
-                            <div class="media-img-wrap">
-                                <div class="avatar">
-                                    <img src="{% static 'orphanage/dist/img/avatar.png' %}" alt="{{ request.user.full_name }}" class="avatar-img rounded-circle">
-                                </div>
-                                <span class="badge badge-success badge-indicator"></span>
-                            </div>
-                            <div class="media-body">
-                                <span>{{ user.username }}<i class="zmdi zmdi-chevron-down"></i></span>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" data-dropdown-in="flipInX" data-dropdown-out="flipOutX">
-{#                        <a class="dropdown-item" href="{% url 'orphanage:profile' %}"><i class="dropdown-icon zmdi zmdi-account"></i><span>Profile</span></a>#}
-{#                        <div class="dropdown-divider"></div>#}
-                        <a class="dropdown-item" href="{% url 'orphanage:logout' %}"><i class="dropdown-icon zmdi zmdi-power"></i><span>تسجيل الخروج</span></a>
-                    </div>
-                </li>
-            </ul>
-
-		</nav>
-        <!-- /Top Navbar -->
-
-        <!-- Vertical Nav -->
-        <nav class="hk-nav hk-nav-dark">
-            <a href="javascript:void(0);" id="hk_nav_close" class="hk-nav-close"><span class="feather-icon"><i data-feather="x"></i></span></a>
-            <div class="nicescroll-bar">
-                <div class="navbar-nav-wrap">
-{#                    <div class="nav-header">#}
-{#                        <span>Orphanage</span>#}
-{#                        <span>O</span>#}
-{#                    </div>#}
-                    <ul class="navbar-nav flex-column">
-                        <!-- <li class="nav-item">
-                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:child_insert' %}">
-                                <span class="nav-link-text">إضافة طفل</span>
-                                <i class="ion ion-md-add"></i>
-                            </a>
-                        </li> -->
-                        <li class="nav-item">
-                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:children' %}">
-                                <span class="nav-link-text">لائحة الأطفال</span>
-                                <i class="fa fa-users"></i>
-{#                                <span class="badge badge-success badge-pill">Hot</span>#}
-                            </a>
-                        </li>
-                        {# <li class="nav-item"> #}
-                        {#     <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:children' %}"> #}
-                        {#         <span class="nav-link-text">لائحة الكفلاء</span> #}
-                        {#         <i class="ion ion-md-list"></i> #}
-                        {#     </a> #}
-                        {# </li> #}
-                        <li class="nav-item">
-                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:grades' %}">
-                                <span class="nav-link-text">لائحة المستويات الدراسية</span>
-                                <i class="fa fa-graduation-cap"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link-with-badge rtl" href="{% url 'orphanage:year_details' %}">
-                                <span class="nav-link-text">السنة الدراسية</span>
-                                <i class="fa fa-calendar"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div id="hk_nav_backdrop" class="hk-nav-backdrop"></div>
-        <!-- /Vertical Nav -->
-
-
-        <div class="hk-pg-wrapper">
-            <!-- /bread_crumbs -->
-            <nav class="hk-breadcrumb" aria-label="breadcrumb">
-                <ol class="breadcrumb breadcrumb-light bg-transparent mb-0 font-weight-bold">
-                {% with breadcrumbs=page_title|get_breadcrumbs:request.path %}
-                    {% for parent in breadcrumbs.0 %}
-                        <li class="breadcrumb-item"><a href="{{ parent.url }}">{{ parent.label }}</a></li>
+          </li>
+          <li class="nav-item d-none d-md-block nav-toggle"><a class="nav-link modern-nav-toggle pr-0"
+              data-toggle="collapse"><i class="toggle-icon ft-toggle-right font-medium-3 white"
+                data-ticon="ft-toggle-right"></i></a></li>
+          <li class="nav-item d-md-none">
+            <a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i
+                class="fa fa-ellipsis-v"></i></a>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar-container content">
+        <div class="collapse navbar-collapse" id="navbar-mobile">
+          <ul class="nav navbar-nav mr-auto float-left">
+            <li class="nav-item d-none d-md-block">
+              <a class="nav-link nav-link-expand" href="#">
+                
+              </a>
+              <!-- <div class="dropdown">
+                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-light dropdown-toggle" type="button">
+                    
+                </button>
+                <div role="menu" class="dropdown-menu" style="will-change: transform;">
+                    {% for year in years %}
+                        <a class="dropdown-item" href="{% url 'orphanage:year_switch' year.year %}">{{ year }}</a>
                     {% endfor %}
-                    <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbs.1 }}</li>
-                {% endwith %}
-                </ol>
-            </nav>
-
-            {% block main %}
-
-            {% endblock main %}
+                </div>
+              </div> -->
+            </li>
+            <li class="dropdown nav-item">
+              <a id="year_switch" class="dropdown-toggle nav-link d-flex flex-row-reverse justify-content-between" href="#" data-toggle="dropdown">
+                {{ current_year }} <i class="ficon ft-calendar"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-left">
+                <!-- <a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> Edit Profile</a> -->
+                  {% for year in years %}
+                    <a class="dropdown-item" href="{% url 'orphanage:year_switch' year.year %}">{{ year }}</a>
+                  {% endfor %}
+              </div>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav float-right">
+            <li class="dropdown dropdown-user nav-item">
+              <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+                <span class="avatar avatar-online">
+                  <img src="{% static 'orphanage/app-assets/images/portrait/small/avatar-s-1.png' %}"
+                    alt="avatar"><i></i></span>
+                <span class="user-name">{{ request.user.username }}</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="{% url 'orphanage:profile' %}">
+                  <i class="ft-user"></i> Edit Profile
+                </a>
+                <!-- <div class="dropdown-divider"></div> -->
+                <a class="dropdown-item" href="{% url 'orphanage:logout' %}">
+                  <i class="ft-power"></i> Logout
+                </a>
+              </div>
+            </li>
+          </ul>
         </div>
-
+      </div>
     </div>
-    <!-- /HK Wrapper -->
+  </nav>
+  <!-- ////////////////////////////////////////////////////////////////////////////-->
+  <div class="main-menu menu-fixed menu-dark menu-accordion" data-scroll-to-active="true">
+    <div class="main-menu-content">
+      <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+        <!-- <li class=" navigation-header">
+          <span>General</span><i class=" ft-minus" data-toggle="tooltip" data-placement="right"
+          data-original-title="General"></i>
+        </li> -->
+        <li class="nav-item">
+          <a>
+            <i class="ft-users"></i><span class="menu-title" data-i18n="">التلاميذ</span>
+          </a>
+          <ul class="menu-content">
+            <li>
+              <a class="menu-item" href="{% url 'orphanage:students' %}">
+                <span class="menu-title" data-i18n="">
+                  لائحة التلاميذ
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="menu-item" href="{% url 'orphanage:student_insert' %}">
+                <span class="menu-title" data-i18n="">
+                  إضافة تلميذ
+                </span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a>
+            <i class="ft-layers"></i><span class="menu-title" data-i18n="">المستويات الدراسية</span>
+          </a>
+          <ul class="menu-content">
+            <li>
+              <a class="menu-item" href="{% url 'orphanage:grade_insert' %}">
+                <span class="menu-title" data-i18n="">
+                  لائحة المستويات الدراسية
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="menu-item" href="{% url 'orphanage:grade_insert' %}"><span class="menu-title" data-i18n="">إضافة
+                  مستوى دراسي</span></a>
+            </li>
+          </ul>
+        </li>
+        <!-- <li class="navigation-divider"></li> -->
+        <!-- <li class=" navigation-header">
+          <span>Apps</span><i class=" ft-minus" data-toggle="tooltip" data-placement="right"
+          data-original-title="Apps"></i>
+        </li> -->
+        <li class="nav-item">
+          <a href="{% url 'orphanage:year_details' %}">
+            <i class="ft-calendar"></i><span class="menu-title" data-i18n="">السنة الدراسية</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-header row">
+      </div>
 
-    <!-- jQuery -->
-    <script src="{% static 'orphanage/vendors/jquery/dist/jquery.min.js' %}"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{% static 'orphanage/vendors/popper.js/dist/umd/popper.min.js' %}"></script>
-    <script src="{% static 'orphanage/vendors/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+      <div class="content-header row">
+        {% block content_header %}
+          <div class="content-header-left col-md-6 col-12 mb-2">
+            <h3 class="content-header-title mb-0 font-weight-bold">{{ page_title_ar }}</h3>
+            <div class="row breadcrumbs-top">
+              <div class="breadcrumb-wrapper col-12">
+                <ol class="breadcrumb">
+                  {% with breadcrumbs=page_title|get_breadcrumbs:request.path %}
+                      {% for parent in breadcrumbs.0 %}
+                          <li class="breadcrumb-item font-weight-bold"><a href="{{ parent.url }}">{{ parent.label }}</a></li>
+                      {% endfor %}
+                      <li class="breadcrumb-item active font-weight-bold" aria-current="page">{{ breadcrumbs.1 }}</li>
+                  {% endwith %}
+                </ol>
+              </div>
+            </div>
+          </div>
+          <div class="content-header-right col-md-6 col-12 mb-2">
+            {% block header_actions %}  
+              <div class="btn-group float-md-right" role="group" aria-label="Button group with nested dropdown">
+                <div class="btn-group" role="group">
+                  <button class="btn btn-outline-primary dropdown-toggle dropdown-menu-right" id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ft-settings icon-left"></i> Settings</button>
+                  <div class="dropdown-menu" aria-labelledby="btnGroupDrop1"><a class="dropdown-item" href="card-bootstrap.html">Bootstrap Cards</a>
+                    <a class="dropdown-item" href="component-buttons-extended.html">Buttons Extended</a>
+                  </div>
+                </div>
+                <a class="btn btn-outline-primary" href="full-calender-basic.html"><i class="ft-mail"></i></a>
+                <a class="btn btn-outline-primary" href="timeline-center.html"><i class="ft-pie-chart"></i></a>
+              </div>
+            {% endblock header_actions %}
+          </div>
+        {% endblock content_header %}
+      </div>
 
-    <!-- Jasny-bootstrap  JavaScript -->
-    <script src="{% static 'orphanage/vendors/jasny-bootstrap/dist/js/jasny-bootstrap.min.js' %}"></script>
+      <div class="content-body">
 
-    <!-- Slimscroll JavaScript -->
-    <script src="{% static 'orphanage/dist/js/jquery.slimscroll.js' %}"></script>
+        {% block content_body %}
+          <!-- Body content here -->
+        {% endblock content_body %}
+      
+      </div>
+    </div>
+  </div>
 
-    <!-- Fancy Dropdown JS -->
-    <script src="{% static 'orphanage/dist/js/dropdown-bootstrap-extended.js' %}"></script>
+  <footer class="footer footer-static footer-light navbar-border">
+    <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
+      <span class="float-md-left d-block d-md-inline-block">
+        Copyright &copy; 2018 <a class="text-bold-800 grey darken-2"
+          href="https://themeforest.net/user/pixinvent/portfolio?ref=pixinvent" target="_blank">PIXINVENT </a>, All
+        rights reserved. </span>
+      <span class="float-md-right d-block d-md-inline-block d-none d-lg-block">
+        Hand-crafted & Made with <i class="ft-heart pink"></i>
+      </span>
+    </p>
+  </footer>
+  
+  <!-- BEGIN VENDOR JS-->
+  <script src="{% static 'orphanage/app-assets/vendors/js/vendors.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'orphanage/app-assets/js/scripts/extensions/toastr.js' %}" type="text/javascript"></script>
+  <script src="{% static 'orphanage/app-assets/vendors/js/extensions/toastr.min.js' %}" type="text/javascript"></script>
+  <!-- BEGIN VENDOR JS-->
+  
+  <!-- BEGIN STACK JS-->
+  <script src="{% static 'orphanage/app-assets/js/core/app-menu.js' %}" type="text/javascript"></script>
+  <script src="{% static 'orphanage/app-assets/js/core/app.js' %}" type="text/javascript"></script>
+  <script src="{% static 'orphanage/app-assets/js/scripts/customizer.js' %}" type="text/javascript"></script>
+  <!-- END STACK JS-->
 
-    <!-- FeatherIcons JavaScript -->
-    <script src="{% static 'orphanage/dist/js/feather.min.js' %}"></script>
+  <!-- BEGIN GLOBAL SCRIPTS -->
+  <script>
+    function show_alert(message="", title, level) {
+        toastr.options = {
+            "progressBar": true,
+            "positionClass": "toast-top-left",
+            "showDuration": "100",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "rtl": true,
+        };
 
-    <!-- Toggles JavaScript -->
-    <script src="{% static 'orphanage/vendors/jquery-toggles/toggles.min.js' %}"></script>
-    <script src="{% static 'orphanage/dist/js/toggle-data.js' %}"></script>
-
-	<!-- Morris Charts JavaScript -->
-    <script src="{% static 'orphanage/vendors/raphael/raphael.min.js' %}"></script>
-    <script src="{% static 'orphanage/vendors/morris.js/morris.min.js' %}"></script>
-
-	<!-- Counter Animation JavaScript -->
-	<script src="{% static 'orphanage/vendors/waypoints/lib/jquery.waypoints.min.js' %}"></script>
-	<script src="{% static 'orphanage/vendors/jquery.counterup/jquery.counterup.min.js' %}"></script>
-
-	<!-- EChartJS JavaScript -->
-    <script src="{% static 'orphanage/vendors/echarts/dist/echarts-en.min.js' %}"></script>
-
-	<!-- Sparkline JavaScript -->
-    <script src="{% static 'orphanage/vendors/jquery.sparkline/dist/jquery.sparkline.min.js' %}"></script>
-
-	<!-- Vector Maps JavaScript -->
-    <script src="{% static 'orphanage/vendors/vectormap/jquery-jvectormap-2.0.3.min.js' %}"></script>
-    <script src="{% static 'orphanage/vendors/vectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
-    <script src="{% static 'orphanage/dist/js/vectormap-data.js' %}"></script>
-
-	<!-- Owl JavaScript -->
-    <script src="{% static 'orphanage/vendors/owl.carousel/dist/owl.carousel.min.js' %}"></script>
-
-	<!-- Toastr JS -->
-    <script src="{% static 'orphanage/vendors/jquery-toast-plugin/dist/jquery.toast.min.js' %}"></script>
-
-    <!-- Init JavaScript -->
-    <script src="{% static 'orphanage/dist/js/init.js' %}"></script>
-	<script src="{% static 'orphanage/dist/js/dashboard-data.js' %}"></script>
-
-    <script>
-        function show_alert(message, level, position) {
-            toastr.options = {
-                "progressBar": true,
-                "positionClass": "toast-" + position,
-                "showDuration": "100",
-                "hideDuration": "1000",
-                "timeOut": "3000",
-                "extendedTimeOut": "1000",
-                "rtl": true,
-            };
-
-            if (level === 'success') {
-                toastr.success('', message);
-            }
-            else if (level === 'danger') {
-                toastr.error('', message);
-            }
-            else if (level === 'warning') {
-                toastr.warning('', message);
-            }
+        if (level === 'success') {
+            toastr.success(message, title);
+            console.log('toastr.success');
         }
+        else if (level === 'danger') {
+            toastr.error(message, title);
+            console.log('toastr.error');
+        }
+        else if (level === 'warning') {
+            toastr.warning(message, title);
+            console.log('toastr.warning');
+        }
+    }
 
 
-        {% for message in messages %}
-            show_alert("{{ message }}", "{{ message.tags }}", 'top-right');
-        {% endfor %}
-    </script>
+    {% for message in messages %}
+        show_alert('', "{{ message }}", "{{ message.tags }}");
+    {% endfor %}
+  </script>
+  <!-- END GLOBAL SCRIPTS -->
 
-    <!-- JavaScript libraries -->
-    {% block js %}
-    {% endblock js %}
-
+  <!-- BEGIN PAGE SCRIPTS -->
+  {% block extra_js %}
+  {% endblock extra_js %}
+  <!-- END PAGE SCRIPTS -->
 </body>
+
 </html>

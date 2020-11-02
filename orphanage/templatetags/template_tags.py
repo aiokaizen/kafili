@@ -17,8 +17,8 @@ def in_range(current, index, range):
 
 
 @register.filter()
-def in_range_3(current, index):
-    return in_range(current, index, 3)
+def in_range_2(current, index):
+    return in_range(current, index, 2)
 
 
 @register.filter()

@@ -4,7 +4,7 @@ from django.template.response import TemplateResponse
 
 from wkhtmltopdf.views import PDFTemplateView, PDFTemplateResponse
 
-from orphanage.models import Child
+from orphanage.models import Student
 
 # import os
 # from django.conf import settings
@@ -61,7 +61,7 @@ from orphanage.models import Child
 from orphanage.utils import get_scholar_year
 
 
-class ChildCardPDF(PDFTemplateView):
+class StudentCardPDF(PDFTemplateView):
 
     cmd_options = {
         'page-width': '140',
@@ -75,26 +75,26 @@ class ChildCardPDF(PDFTemplateView):
 
     filename = None
 
-    template_name = 'orphanage/pdf/child_card.html'
+    template_name = 'orphanage/pdf/student_card.html'
 
     context = {}
 
     def get(self, request, *args, **kwargs):
 
-        if 'child_id' in kwargs:
-            children = Child.objects.filter(pk=kwargs['child_id'])
-            if not children:
+        if 'student_id' in kwargs:
+            students = Student.objects.filter(pk=kwargs['student_id'])
+            if not students:
                 raise Http404()
-            child_title = 'الطفل' if children[0].sex == 'm' else 'الطفلة'
-            messages.success(request, 'لقد تمت طباعة بطاقة ' + child_title + ' بنجاح.')
+            student_title = 'التلميذ' if students[0].sex == 'm' else 'التلميذة'
+            messages.success(request, 'لقد تمت طباعة بطاقة ' + student_title + ' بنجاح.')
         else:
-            if 'children_ids' in kwargs:
-                children = Child.objects.filter(id__in=kwargs['children_ids'])
+            if 'students_ids' in kwargs:
+                students = Student.objects.filter(id__in=kwargs['students_ids'])
             else:
-                children = Child.objects.all()
+                students = Student.objects.all()
             messages.success(request, 'تمت طباعة بطاقات الأطفال بنجاح.')
 
-        self.context['children'] = children
+        self.context['students'] = students
         self.context['scholar_year'] = get_scholar_year(switch_month=6)
 
         if request.GET.get('as', '') == 'html':

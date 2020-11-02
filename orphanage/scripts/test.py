@@ -18,7 +18,7 @@ start = datetime.now()
 # ----------------------------------------------------------------
 
 # code goes under
-print(Child.import_photos())
+print(Student.import_photos())
 
 # ----------------------------------------------------------------
 #  END SCRIPT

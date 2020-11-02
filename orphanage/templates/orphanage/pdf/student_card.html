@@ -1,0 +1,126 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if students|length == 1 %}{{ students.0.id }}_{{ students.0.full_name }}{% else %}بطاقات التلاميذ{% endif %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        body {
+            background-image: url('{% static 'orphanage/img/pdf/card_bg.jpg' %}');
+            background: #fff;
+            color: #333;
+            direction: rtl;
+            margin: 0;
+            padding: 0 10px;
+        }
+        * {
+            box-sizing: border-box;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+        .font-bold {
+            font-weight: bold;
+        }
+        .w-100 {
+            width: 100%;
+        }
+        .m-0 {
+            margin: 0;
+        }
+        .mt-1 {
+            margin-top: 5px;
+        }
+        .mb-0 {
+            margin-bottom: 0;
+        }
+        .border-bottom-1 {
+            border-bottom: 1px solid #ccc;
+        }
+        .light-bg {
+            background-color: #ccc;
+        }
+        .text-black {
+            color: #222;
+        }
+
+        .student-card {
+            page-break-before: always;
+        }
+        .student-card .header table {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            background-color: #ccc;
+        }
+        .content > div { /* .img + .infos */
+            float: right;
+        }
+        .content .img {
+            width: 25%;
+        }
+        .content .infos {
+            width: 75%;
+            padding-right: 10px;
+        }
+        .small-txt {
+            {#font-size: 15px;#}
+        }
+    </style>
+</head>
+
+<body>
+    {% for student in students %}
+        <div class="student-card">
+            <div class="header">
+                <table>
+                    <tr class="border-bottom-1">
+                        <td style="height: 100px;"><img style="height: 100%;" src="{% static 'orphanage/img/pdf/logo2.jpg' %}" alt=""></td>
+                        <td style="height: 100px; width: 425px;"><h3 class="text-center w-100">جمعية أصدقاء المركز الإستشفائي الجامعي محمد السادس بمراكش<br />المركب التربوي بزرقطن</h3></td>
+                        <td style="height: 100px;"><img style="height: 100%;" src="{% static 'orphanage/img/pdf/cp_zerkten.png' %}" alt=""></td>
+                    </tr>
+                    <tr class="light-bg">
+                        <td colspan="3">
+                            <h1 class="text-center mb-0 mt-1 text-black">بطاقة التلميذ</h1>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="content">
+                <div class="img">
+                    <img style="max-height: 180px;" src="{% if student.picture %}{{ student.picture.url }}{% else %}/static/orphanage/img/default/{% if student.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="">
+                    <h2 class="text-center m-0">{{ student.subscription_id }}</h2>
+                </div>
+                <div class="infos">
+                    <table style="font-size: 23px;">
+                        <tr>
+                            <td>الإسم الكامل</td>
+                            <td class="font-bold"> : {{ student.full_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>تاريخ الإزدياد</td>
+                            <td class="font-bold"> : {{ student.birthday|date:'Y/m/d' }}</td>
+                        </tr>
+                        <tr>
+                            <td>العنوان</td>
+                            <td class="font-bold"> : {{ student.get_short_address }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0;">المستوى الدراسي</td>
+                            <td class="font-bold"> : {{ student.grade }}</td>
+                        </tr>
+                        <tr>
+                            <td>السنة الدراسية</td>
+                            <td class="font-bold"> : {{ scholar_year }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+</body>
+</html>

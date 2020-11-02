@@ -9,13 +9,14 @@ from django.urls import reverse
 from django.contrib.auth import logout as django_logout
 
 from orphanage.decorators import valid_session
-from orphanage.forms import ConnectionForm, ChildForm
-from orphanage.models import Child, Year
+from orphanage.forms import ConnectionForm, RegistrationForm, StudentForm
+from orphanage.models import Student, Year
 
 
 def connexion(request):
     user = request.user if request.user.is_authenticated else None
     if request.method == 'POST':
+        print('POST method in connection view')
         form = ConnectionForm(request.POST)
         if not user:
             username = request.POST['username']
@@ -25,10 +26,28 @@ def connexion(request):
             login(request, user)
             url = request.GET.get('next') if 'next' in request.GET else reverse('orphanage:home')
             return redirect(url)
+        else:
+            print('adding form error')
+            form.add_error('username', 'إسم المستخدم أو كلمة المرور خاطئة.')
     else:
         form = ConnectionForm()
 
-    return render(request, 'orphanage/login.html', {
+    return render(request, 'orphanage/authentication/login.html', {
+        'form': form,
+    })
+
+
+def request_registration(request):
+
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'orphanage/authentication/request_registration_finish.html')
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'orphanage/authentication/request_registration.html', {
         'form': form,
     })
 
@@ -56,6 +75,7 @@ def logout(request):
 def home(request):
     context = {
         'page_title': 'Home',
+        'page_title_ar': 'الصفحة الرئيسية',
     }
 
     return render(request, 'orphanage/home.html', context)

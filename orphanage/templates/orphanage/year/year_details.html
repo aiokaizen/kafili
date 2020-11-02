@@ -1,6 +1,6 @@
 {% extends 'orphanage/base.html' %}
 
-{% block  main %}
+{% block  content_body %}
     <div class="container">
         <div class="actions">
             <a class="btn btn-primary pull-right font-weight-bold" href="{% url 'orphanage:year_insert' %}">إضافة سنة دراسية <i class="fa fa-plus"></i></a>
@@ -9,4 +9,4 @@
             <h3>أنت الآن متصل ضمن فضاء السنة الدراسية {{ current_year }}</h3>
         </div>
     </div>
-{% endblock main %}
+{% endblock content_body %}

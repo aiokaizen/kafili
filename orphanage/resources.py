@@ -1,12 +1,12 @@
 from import_export import resources
 
-from orphanage.models import Child
+from orphanage.models import Student
 
 
-class ChildResources(resources.ModelResource):
+class StudentResources(resources.ModelResource):
 
     class Meta:
-        model = Child
+        model = Student
         skip_unchanged = True
         report_skipped = False
 

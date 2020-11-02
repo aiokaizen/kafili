@@ -4,3 +4,5 @@ __pycache__
 *.pyc
 /media
 /static
+/tmp
+node_modules

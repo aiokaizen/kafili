@@ -9,10 +9,10 @@ from django.contrib.auth.models import User
 from orphanage import settings as orphanage_settings
 
 
-class Child(models.Model):
+class Student(models.Model):
 
     class Meta:
-        verbose_name = 'طفل'
+        verbose_name = 'تلميذ'
         verbose_name_plural = 'أطفال'
         ordering = ('first_name', 'last_name')
 
@@ -34,7 +34,7 @@ class Child(models.Model):
     first_name = models.CharField('الإسم', max_length=255)
     last_name = models.CharField('اللقب', max_length=255)
     full_name = models.CharField('الإسم الكامل', max_length=255, null=True, blank=True)
-    picture = models.ImageField('الصورة', upload_to='images/children', null=True, blank=True)
+    picture = models.ImageField('الصورة', upload_to='images/students', null=True, blank=True)
     sex = models.CharField('الجنس', max_length=1, choices=SEX_CHOICES, null=True, blank=True)
     grade = models.CharField('المستوى الدراسي', max_length=10, null=True, blank=True)
     birthday = models.DateField('تاريخ الإزدياد', null=True, blank=True)
@@ -67,12 +67,15 @@ class Child(models.Model):
     # def save(self, *args, **kwargs):
     #     if self.full_name != self.first_name + ' ' + self.last_name:
     #         self.update_full_name()
-    #     super(Child, self).save(*args, **kwargs)
+    #     super(Student, self).save(*args, **kwargs)
 
     @classmethod
     def list(cls, **kwargs):
 
         filters = Q()
+        if 's_query' in kwargs:
+            name = kwargs['s_query'][0]
+            filters = Q(first_name__icontains=name) | Q(last_name__icontains=name) | Q(full_name__icontains=name)
         if 'name' in kwargs:
             name = kwargs['name'][0]
             filters = Q(first_name__icontains=name) | Q(last_name__icontains=name) | Q(full_name__icontains=name)
@@ -80,14 +83,42 @@ class Child(models.Model):
             ids = kwargs['ids']
             filters &= Q(id__in=ids)
 
+        if 'subscription_id' in kwargs and kwargs['subscription_id'][0]:
+            subscription_id = kwargs['subscription_id'][0]
+            filters = Q(subscription_id=subscription_id)
+        if 'sex' in kwargs and kwargs['sex'][0]:
+            sex = kwargs['sex'][0]
+            filters = Q(sex=sex)
+        if 'village' in kwargs and kwargs['village'][0]:
+            village = kwargs['village'][0]
+            filters = Q(village__icontains=village)
+        if 'shoo_size' in kwargs and kwargs['shoo_size'][0]:
+            shoo_size = kwargs['shoo_size'][0]
+            filters = Q(shoo_size__icontains=shoo_size)
+        if 'vision' in kwargs and kwargs['vision'][0]:
+            vision = kwargs['vision'][0]
+            filters = Q(vision__icontains=vision)
+        if 'orphan_side' in kwargs and kwargs['orphan_side'][0]:
+            orphan_side = kwargs['orphan_side'][0]
+            filters = Q(orphan_side=orphan_side)
+        if 'chronic_disease' in kwargs and kwargs['chronic_disease'][0]:
+            chronic_disease = kwargs['chronic_disease'][0]
+            filters = Q(chronic_disease__icontains=chronic_disease)
+        if 'hobby' in kwargs and kwargs['hobby'][0]:
+            hobby = kwargs['hobby'][0]
+            filters = Q(hobby__icontains=hobby)
+        if 'status' in kwargs and kwargs['status'][0]:
+            status = kwargs['status'][0]
+            filters = Q(status=status)
+
         return cls.objects.filter(filters)
 
     @classmethod
     def import_photos(cls):
-        children = cls.objects.all()
+        students = cls.objects.all()
 
         basedir = settings.BASE_DIR
-        path = basedir + f'{settings.MEDIA_URL}images/children'
+        path = basedir + f'{settings.MEDIA_URL}images/students'
         if not os.path.exists(path):
             os.mkdir(path)
         not_imported = []
@@ -99,12 +130,12 @@ class Child(models.Model):
 
                 if not value.isdigit():
                     continue
-                child = children.get(id=value)
-                if not child.picture or 1:
-                    img_path = f'images/children/{img}'
-                    child.picture = img_path
-                    child.save(update_fields=['picture', ])
-                    print(child)
+                student = students.get(id=value)
+                if not student.picture or 1:
+                    img_path = f'images/students/{img}'
+                    student.picture = img_path
+                    student.save(update_fields=['picture', ])
+                    print(student)
                     success_import_count += 1
 
             except ObjectDoesNotExist:
@@ -163,14 +194,14 @@ class Registration(models.Model):
         verbose_name = 'الملف الدراسي'
         verbose_name_plural = 'الملفات الدراسية'
     
-    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     grade = models.ForeignKey(Grade, on_delete=models.PROTECT)
     year = models.ForeignKey(Year, on_delete=models.PROTECT)
     s1_mark = models.DecimalField('نقطة الدورة الأولى', max_digits=4, decimal_places=2)
     s2_mark = models.DecimalField('نقطة الدورة الثانية', max_digits=4, decimal_places=2)
 
     def __str__(self):
-        return f"{self.child}"
+        return f"{self.student}"
 
 
 class Subject(models.Model):
@@ -208,8 +239,22 @@ class Guardian(User):
         verbose_name_plural = 'الكفلاء'
 
     picture = models.ImageField('الصورة', upload_to='images/guardians', null=True, blank=True)
+    first_name_ar = models.CharField('الإسم الشخصي بالعربية', max_length=57, default='', blank=True)
+    last_name_ar = models.CharField('الإسم العائلي بالعربية', max_length=57, default='', blank=True)
     phone_number = models.CharField('رقم الهاتف', max_length=25, null=True, blank=True)
-    status = models.CharField('الحالة', max_length=10, choices=orphanage_settings.GUARDIAN_STATUS_CHOICES, null=True, blank=True)
+    status = models.CharField('الحالة', max_length=10, choices=orphanage_settings.GUARDIAN_STATUS_CHOICES, default='pending', blank=True)
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
+
+    def save(self, *args, **kwargs):
+        if self.id:
+            self.change(*args, **kwargs)
+        else:
+            self.create(*args, **kwargs)
+    
+    def create(self, *args, **kwargs):
+        super(Guardian, self).save(self, *args, **kwargs)
+    
+    def change(self, *args, **kwargs):
+        super(Guardian, self).save(self, *args, **kwargs)

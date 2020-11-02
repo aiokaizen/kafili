@@ -1,6 +1,6 @@
 {% extends 'orphanage/base.html' %}
 
-{% block  main %}
+{% block  content_body %}
 <div class="page-content">
 
     <div class="hk-pg-header pt-4 mb-0">
@@ -26,7 +26,7 @@
                                 {% endif %}
                             </div>
                             <hr>
-                            <a class="btn btn-default font-weight-bold" href="{% if form.instance.id %}{%  url 'orphanage:child_details' form.instance.id %}{% else %}{%  url 'orphanage:children' %}{% endif %}">
+                            <a class="btn btn-default font-weight-bold" href="{% if form.instance.id %}{%  url 'orphanage:student_details' form.instance.id %}{% else %}{%  url 'orphanage:students' %}{% endif %}">
                                 إلغاء
                             </a>
                             <button class="btn btn-primary font-weight-bold" type="submit">تأكيد</button>
@@ -38,4 +38,4 @@
     </div>
 
 </div>
-{% endblock main %}
+{% endblock content_body %}

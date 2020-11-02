@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # tmp/test_script.py
-# Usage : This script renames all images in 'media/images/children' from full_name.ext to subscription_id.ext
+# Usage : This script renames all images in 'media/images/students' from full_name.ext to subscription_id.ext
 
 import os
 from datetime import datetime
@@ -19,10 +19,10 @@ start = datetime.now()
 # ----------------------------------------------------------------
 
 
-children = Child.objects.all()
+students = Student.objects.all()
 
 basedir = settings.BASE_DIR
-path = basedir + f'{MEDIA_URL}images/children'
+path = basedir + f'{MEDIA_URL}images/students'
 if not os.path.exists(path):
     os.mkdir(path)
 images_non_importees = []
@@ -33,9 +33,9 @@ for img in os.listdir(path):
     try:
         value = img.split('.')[0]
 
-        child = children.get(full_name=value)
+        student = students.get(full_name=value)
 
-        new_name = f'{child.id}.{img.split(".")[1]}'
+        new_name = f'{student.id}.{img.split(".")[1]}'
         os.rename(f'{path}/{img}', f'{path}/{new_name}')
         print(f'renamed_file: /{img} > /{new_name}')
 
