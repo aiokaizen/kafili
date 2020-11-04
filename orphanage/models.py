@@ -69,6 +69,16 @@ class Student(models.Model):
     #         self.update_full_name()
     #     super(Student, self).save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        super(Student, self).delete(*args, **kwargs)
+
+    @classmethod
+    def delete_students(cls, students):
+        res, message = True, "لقد تمت العملية بنجاح."
+        for student in students:
+            student.delete()
+        return res, message
+
     @classmethod
     def list(cls, **kwargs):
 
@@ -146,11 +156,10 @@ class Student(models.Model):
             non_importees = ''
             for img in not_imported:
                 non_importees += img + '; '
-            err_message = ('warning', f'({len(not_imported)}/{len(os.listdir(path))})',
-                           f'Images were not imported: {non_importees}')
+            err_message = f'({len(not_imported)}/{len(os.listdir(path))}) Images were not imported: {non_importees}'
 
-        message = ('success', f"{success_import_count} images were imported.")
-        return True, [message, err_message]
+        message = f"لقد تم إستيراد {success_import_count} صورة."
+        return True, message, err_message
 
 
 class Year(models.Model):

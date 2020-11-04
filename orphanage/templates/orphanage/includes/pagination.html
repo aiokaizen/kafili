@@ -1,14 +1,14 @@
-{% load template_tags %}
+{% load template_tags arurl_tags %}
 
 {% if items and number_of_pages > 1 %}
     <nav class="pagination-wrap  justify-content-center mb-25" aria-label="Page navigation example">
         <ul class="pagination">
             {% if previous_page %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ request.path }}?page=1" tabindex="-1"><<</a>
+                    <a class="page-link" href="{% arurl_update request.get_full_path page=1 %}" tabindex="-1"><<</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="{{ request.path }}?page={{ previous_page }}" tabindex="-1">السابق</a>
+                    <a class="page-link" href="{% arurl_update request.get_full_path page=previous_page %}" tabindex="-1">السابق</a>
                 </li>
             {% else %}
                 <li class="page-item disabled">
@@ -20,16 +20,16 @@
                 {% if index == items.number %}
                     <li class="page-item active"><a class="page-link">{{ index }}</a></li>
                 {% elif items.number|in_range_2:index %}
-                    <li class="page-item"><a class="page-link" href="{{ request.path }}?page={{ index }}">{{ index }}</a></li>
+                    <li class="page-item"><a class="page-link" href="{% arurl_update request.get_full_path page=index %}">{{ index }}</a></li>
                 {% endif %}
             {% endfor %}
 
             {% if next_page %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ request.path }}?page={{ next_page }}">التالي</a>
+                    <a class="page-link" href="{% arurl_update request.get_full_path page=next_page %}">التالي</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="{{ request.path }}?page={{ range|length }}" tabindex="-1">>></a>
+                    <a class="page-link" href="{% arurl_update request.get_full_path page=range|length %}" tabindex="-1">>></a>
                 </li>
             {% else %}
                 <li class="page-item">

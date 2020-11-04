@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'import_export',
-
     'wkhtmltopdf',
+    'sekizai',
 
     'orphanage',
 ]
@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'orphanage.context_processors.main_context',
+                'sekizai.context_processors.sekizai',
             ],
         },
     },
@@ -149,6 +150,7 @@ DATE_INPUT_FORMATS = [
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
+    messages.WARNING: 'warning',
 }
 
 # ----------------------------------

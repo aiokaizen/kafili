@@ -1,7 +1,7 @@
 from django.conf import settings
 
 
-TABLE_MAX_ITEMS = getattr(settings, 'TABLE_MAX_ITEMS', 10)
+TABLE_SIZE = getattr(settings, 'TABLE_SIZE', 10)
 
 
 BREADCRUMBS_DEPTH_LEVEL = getattr(settings, 'BREADCRUMBS_DEPTH_LEVEL', 3)

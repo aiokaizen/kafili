@@ -1,6 +1,18 @@
 {% extends 'orphanage/base.html' %}
 {% load staticfiles %}
 
+{% block extra_css %}
+    <style>
+        .main-stats .card {
+            transition: .3s;
+            box-shadow: 0 0 0 transparent;
+        }
+        .main-stats .card:hover {
+            box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+        }
+    </style>
+{% endblock %}
+
 {% block content_header %}
 <!-- <div class="content-header-left col-md-6 col-12 mb-1">
   <h3 class="content-header-title font-weight-bold">{{ page_title_ar }}</h3>

@@ -1,0 +1,37 @@
+
+.table tr td {
+    vertical-align: middle;
+}
+
+.ltr {
+    direction: ltr;
+}
+.ltr.has-icon-left input {
+    padding-left: 2.5em !important;
+}
+
+#year_switch i {
+    margin-top: -2px;
+}
+#year_switch.dropdown-toggle::after {
+    content: none !important;
+}
+#year_switch.dropdown-toggle::before {
+    font-family: 'FontAwesome';
+    content: '\f107' !important;
+    border: none !important;
+    position: relative;
+    top: 1px;
+    left: 0;
+    padding: 0 6px 0 2px;
+    margin: 0 0 0 0.3em;
+    vertical-align: 0;
+}
+
+.navigation-main .nav-item .menu-title {
+    font-weight: bold;
+    font-size: 15px;
+}
+.navigation-main .nav-item i {
+    font-size: 18px;
+}

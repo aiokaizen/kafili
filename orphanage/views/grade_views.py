@@ -16,11 +16,11 @@ def grades(request):
 
     grades_qset = Grade.list(**request.GET)
 
-    number_per_page = orphanage_settings.TABLE_MAX_ITEMS
+    table_size = orphanage_settings.TABLE_SIZE
     next_page = None
     previous_page = None
 
-    paginator = Paginator(grades_qset, number_per_page)
+    paginator = Paginator(grades_qset, table_size)
     if request.GET.get('page'):
         page = request.GET.get('page')
     else:
@@ -39,7 +39,7 @@ def grades(request):
 
     context = {
         'items': queryset,
-        'number_per_page': number_per_page,
+        'table_size': table_size,
         'page': page,
         'number_of_pages': paginator.num_pages,
         'range': paginator.page_range,

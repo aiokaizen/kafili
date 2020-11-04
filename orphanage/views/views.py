@@ -10,13 +10,12 @@ from django.contrib.auth import logout as django_logout
 
 from orphanage.decorators import valid_session
 from orphanage.forms import ConnectionForm, RegistrationForm, StudentForm
-from orphanage.models import Student, Year
+from orphanage.models import Student, Year, Grade, Subject, Guardian
 
 
 def connexion(request):
     user = request.user if request.user.is_authenticated else None
     if request.method == 'POST':
-        print('POST method in connection view')
         form = ConnectionForm(request.POST)
         if not user:
             username = request.POST['username']
@@ -73,9 +72,19 @@ def logout(request):
 @login_required
 @valid_session
 def home(request):
+    
+    students_count = Student.objects.count()
+    grades_count = Grade.objects.count()
+    subjects_count = Subject.objects.count()
+    guardians_count = Guardian.objects.count()
+
     context = {
         'page_title': 'Home',
         'page_title_ar': 'الصفحة الرئيسية',
+        'students_count': students_count,
+        'grades_count': grades_count,
+        'subjects_count': subjects_count,
+        'guardians_count': guardians_count,
     }
 
     return render(request, 'orphanage/home.html', context)

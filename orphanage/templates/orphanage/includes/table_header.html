@@ -1,4 +1,4 @@
-{% load template_tags %}
+{% load template_tags arurl_tags sekizai_tags %}
 
 <div class="row mb-2">
     <div class="col-sm-12 col-md-5">
@@ -8,14 +8,21 @@
                 <i class="ft-filter"></i> فلتر
             </button>
             <form action="" class="w-100">
-                <input type="search" name="s_query" value="{{ request.GET.s_query }}" style="line-height: 1em;" class="form-control" placeholder="بحث">
+                <fieldset>
+                    <div class="input-group">
+                        <input type="search" name="s_query" value="{{ request.GET.s_query }}" style="line-height: 1em;" class="form-control" placeholder="بحث">
+                      <div class="input-group-append" id="button-addon2">
+                        <button type="submit" class="btn btn-primary"><i class="ft-search"></i></button>
+                      </div>
+                    </div>
+                  </fieldset>
             </form>
         </div>
     </div>
     <div class="col-sm-12 col-md-7">
         <div class="d-flex align-items-center justify-content-end">
             إظهار
-            <select name="items-per-page" style="width: 100px;" class="form-control mx-1">
+            <select id="items-per-page-cb" name="items-per-page" style="width: 100px;" class="form-control mx-1">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -53,3 +60,23 @@
         </div>
     </div>
 </div>
+
+{% addtoblock 'js' %}
+    <script>
+        {% arurl_get request.get_full_path 'tablesize' as url_table_size %}
+        {% if url_table_size %}
+            document.getElementById('items-per-page-cb').value = "{% arurl_get request.get_full_path 'tablesize' %}";
+        {% else %}
+            document.getElementById('items-per-page-cb').value = "{{ table_size }}";
+        {% endif %}
+        let urls = {
+            '10': "{% arurl_update request.get_full_path tablesize=10 %}",
+            '25': "{% arurl_update request.get_full_path tablesize=25 %}",
+            '50': "{% arurl_update request.get_full_path tablesize=50 %}",
+            '100': "{% arurl_update request.get_full_path tablesize=100 %}"
+        }
+        document.getElementById('items-per-page-cb').addEventListener('change', function() {
+            window.location.replace(urls[this.value]);
+        });
+    </script>
+{% endaddtoblock %}

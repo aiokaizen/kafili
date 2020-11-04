@@ -16,11 +16,18 @@ def students(request):
 
     qset = Student.list(**request.GET)
 
-    number_per_page = orphanage_settings.TABLE_MAX_ITEMS
+    table_size = orphanage_settings.TABLE_SIZE
+    if 'tablesize' in request.GET:
+        try:
+            tmp_table_size = int(request.GET['tablesize'])
+            if tmp_table_size > 0:
+                table_size = tmp_table_size
+        except ValueError:
+            pass
     next_page = None
     previous_page = None
 
-    paginator = Paginator(qset, number_per_page)
+    paginator = Paginator(qset, table_size)
     if request.GET.get('page'):
         page = request.GET.get('page')
     else:
@@ -42,9 +49,26 @@ def students(request):
         if request.GET[key]:
             initial_dict[key] = request.GET[key]
 
+    # POST METHOD
+    if request.method == 'POST':
+        if request.POST.get('action', '') == 'delete':
+            students = Student.objects.filter(pk__in=request.POST.getlist('students_ids', ''))
+            res, message = Student.delete_students(students)
+            if res:
+                messages.success(request, message)
+            else:
+                messages.error(request, message)
+            return redirect(reverse('orphanage:students'))
+        elif request.POST.get('action', '') == 'import_pictures':
+            res, message, err_msg = Student.import_photos()
+            messages.success(request, message)
+            if err_msg:
+                messages.warning(request, err_msg)
+            return redirect(reverse('orphanage:students'))
+
     context = {
         'items': orphans_page,
-        'number_per_page': number_per_page,
+        'table_size': table_size,
         'page': page,
         'filter_form': StudentFilterForm(initial=initial_dict),
         'number_of_pages': paginator.num_pages,

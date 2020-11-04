@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-TABLE_MAX_ITEMS = 25
+TABLE_SIZE = 25
 
 BREADCRUMBS_DEPTH_LEVEL = 2
 
