@@ -71,7 +71,7 @@ class StudentForm(forms.ModelForm):
             'subscription_id': forms.NumberInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'picture': ImageWidget(),
+            'picture': ImageWidget(attrs={'class': 'custom-file-input'}),
             'sex': forms.Select(choices=Student.SEX_CHOICES, attrs={'class': 'form-control'}),
             'grade': forms.TextInput(attrs={'class': 'form-control'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
@@ -84,7 +84,7 @@ class StudentForm(forms.ModelForm):
             'orphan_side': forms.Select(choices=Student.ORPHAN_CHOICES, attrs={'class': 'form-control'}),
             'chronic_disease': forms.TextInput(attrs={'class': 'form-control'}),
             'hobby': forms.TextInput(attrs={'class': 'form-control'}),
-            'status': forms.TextInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def clean(self):

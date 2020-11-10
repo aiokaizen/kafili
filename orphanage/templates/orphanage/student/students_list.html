@@ -18,7 +18,7 @@
                 <a class="dropdown-item" onclick="import_pictures()">استيراد الصور</a>
             </div>
         </div>
-        <a class="btn btn-outline-primary" href="full-calender-basic.html"><i class="ft-plus"></i></a>
+        <a class="btn btn-outline-primary" href="{% url 'orphanage:student_insert' %}"><i class="ft-plus"></i></a>
         <a class="btn btn-outline-primary" target="blank" href="{% url 'orphanage:print_cards' %}"><i class="ft-printer"></i></a>
     </div>
 {% endblock header_actions %}
@@ -131,7 +131,7 @@
         function delete_selected_items() {
             if ($('.item_select:checked').length == 0) {
                 swal({
-                    title: "تحدير",
+                    title: "تحذير",
                     text: "لم تقم بإختيار أي تلميذ من القائمة",
                     icon: "warning",
                     button: {
@@ -144,15 +144,25 @@
                 });
             }
             else {
-                $('body').append(`
-                    <form method="POST" id="delete_form">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="delete">
-                    </form>
-                `);
-                let form = $("#delete_form");
-                form.append($(".item_select").clone());
-                form.submit();
+                swal({
+                    title: "تحذير",
+                    text: "هل أنت متأكد من مسح التلاميذ المختارين ؟",
+                    icon: "error",
+                    buttons: ['إلغاء', 'نعم'],
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        $('body').append(`
+                            <form method="POST" id="delete_form">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                            </form>
+                        `);
+                        let form = $("#delete_form");
+                        form.append($(".item_select").clone());
+                        form.submit();
+                    }
+                });
             }
         }
         function import_pictures() {

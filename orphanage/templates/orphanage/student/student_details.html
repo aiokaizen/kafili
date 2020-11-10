@@ -1,88 +1,179 @@
 {% extends 'orphanage/base.html' %}
+{% load static %}
 
-{% block stylesheets %}
+{% block extra_css %}
     <style>
-        img {
+        img.image {
             width: 100%;
         }
     </style>
-{% endblock stylesheets %}
+{% endblock extra_css %}
 
-{% block  content_body %}
-    <div class="page-content">
-        <div class="hk-pg-header mb-0">
-            <h4 class="hk-pg-title rtl font-weight-bold w-100 justify-content-end pr-4 pt-2 pb-0">
-                المعلومات الخاصة بالتلميذ{% if student.sex == 'f' %}ة{% endif %}
-                {% if student.full_name %}{{ student.full_name }}{% else %}{{ student.first_name }} {{ student.last_name }}{% endif %}
-            </h4>
+{% block header_actions %}  
+    <div class="btn-group float-md-right" role="group" aria-label="Button group with nested dropdown">
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-primary dropdown-toggle dropdown-menu-left" id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="ft-more-vertical icon-left"></i> المزيد
+            </button>
+            <div class="dropdown-menu dropdown-menu-left" aria-labelledby="btnGroupDrop1" style="width: 175px;">
+                <a class="dropdown-item" onclick="delete_instance()">مسح بينات التلميذ{% if student.sex == 'f' %}ة{% endif %}</a>
+            </div>
         </div>
+        <a class="btn btn-outline-primary" href="{% url 'orphanage:print_card' student.id %}" title="طباعة بطاقة التلميذ{% if student.sex == 'f' %}ة{% endif %}" target="_blank"><i class="ft-printer"></i></a>
+        <a class="btn btn-outline-primary" href="{% url 'orphanage:student_update' student.id %}" title="تحديث بينات التلميذ{% if student.sex == 'f' %}ة{% endif %}"><i class="ft-edit"></i></a>
+        <a class="btn btn-outline-primary" href="{% url 'orphanage:student_insert' %}" title="إضافة تلميذ(ة)"><i class="ft-plus"></i></a>
+    </div>
+{% endblock header_actions %}
 
-        <div class="container mt-3">
-            <div class="row infos rtl">
-                <div class="col-md-9 col-sm-12 basic-infos">
-                    <table class="rtl w-100 table-striped table-sm">
-                        <tr><td>{{ student.subscription_id }}</td>
-                            <th style="width: 150px;">:رقم التسجيل بالمركب</th></tr>
-                        <tr><td>{{ student.birthday|date:'Y/m/d'|default_if_none:'' }}</td>
-                            <th>:تاريخ الإزدياد</th></tr>
-                        <tr><td>{{ student.phone_number|default_if_none:'' }}</td>
-                            <th>:رقم الهاتف</th></tr>
-                        <tr><td>{{ student.get_address|default_if_none:'' }}</td>
-                            <th>:الدوار</th></tr>
-                        <tr><td>{{ student.weight|default_if_none:'' }} Kg</td>
-                            <th>:الوزن</th></tr>
-                        <tr><td>{{ student.height|default_if_none:'' }} cm</td>
-                            <th>:القامة</th></tr>
-                        <tr><td>{{ student.bed_position|default_if_none:'' }}</td>
-                            <th>:تموضع السرير</th></tr>
-                        <tr><td>{{ student.shoo_size|default_if_none:'' }}</td>
-                            <th>:مقاس الحذاء</th></tr>
-                        {% if student.vision %}
-                            <tr><td>{{ student.vision }}</td>
-                                <th>:الرؤية</th></tr>
-                        {% endif %}
-                        {% if student.orphan_side %}
-                            <tr><td>{{ student.orphan_side|default_if_none:'' }}</td>
-                                <th>:اليتم</th></tr>
-                        {% endif %}
-                        {% if student.chronic_disease %}
-                            <tr><td class="text-danger">{{ student.chronic_disease }}</td>
-                                <th>:مرض مزمن</th></tr>
-                        {% endif %}
-                        <tr><td>{{ student.hobby|default_if_none:'' }}</td>
-                            <th>:الهواية</th></tr>
-                        {% if student.status %}
-                            <tr><td>{{ student.status }}</td>
-                                <th>:الحالة</th></tr>
-                        {% endif %}
-                    </table>
-                </div>
-                <div class="col-md-3 col-sm-12 img_container">
-                    <img class="image" src="{% if student.picture %}{{ student.picture.url }}{% else %}/static/orphanage/img/default/{% if student.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ student.full_name }}">
-                    <div>
-                        <h3 class="text-center">
-                            {% if student.full_name %}{{ student.full_name }}
-                                {% else %}{{ student.first_name }} {{ student.last_name }}{% endif %}
-                        </h3>
-                        <h5 class="text-center">{{ student.grade|default_if_none:"-- " }}المستوى </h5>
+{% block content_body %}
+
+<section id="javascript">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12 mt-2">
-                    <a class="btn btn-secondary font-weight-bold" href="{% url 'orphanage:print_card' student.id %}" target="_blank">طباعة بطاقة التلميذ{% if student.sex == 'f' %}ة{% endif %}</a>
-                    <a class="btn btn-danger text-white font-weight-bold" data-toggle="modal" data-target="#delete_confirmation_modal">
-                        مسح البيانات
-                    </a>
-                    <a class="btn btn-primary font-weight-bold" href="{% url 'orphanage:student_update' student.id %}">تحديث البيانات</a>
+                <div class="card-content collpase show">
+                    <div class="card-body card-dashboard">
+                        <div class="container-fluid dt-bootstrap4 no-footer">
+                            <div class="container">
+                                <div class="row infos">
+                                    <div class="col-md-3 col-sm-12 img_container">
+                                        <img class="image" src="{% if student.picture %}{{ student.picture.url }}{% else %}/static/orphanage/img/default/{% if student.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ student.full_name }}">
+                                        <div>
+                                            <h3 class="text-center">
+                                                {% if student.full_name %}{{ student.full_name }}
+                                                    {% else %}{{ student.first_name }} {{ student.last_name }}{% endif %}
+                                            </h3>
+                                            <h5 class="text-center">المستوى {{ student.grade|default_if_none:"-- " }}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9 col-sm-12 basic-infos">
+                                        <table class="w-100 table-striped table-sm">
+                                            <tr>
+                                                <th style="width: 150px;">:رقم التسجيل بالمركب</th>
+                                                <td>{{ student.subscription_id }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>:تاريخ الإزدياد</th>
+                                                <td>{{ student.birthday|date:'Y/m/d'|default_if_none:'' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>:رقم الهاتف</th>
+                                                <td>{{ student.phone_number|default_if_none:'' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>:الدوار</th>
+                                                <td>{{ student.get_address|default_if_none:'' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>:الوزن</th>
+                                                <td>{{ student.weight|default_if_none:'' }} Kg</td>
+                                            </tr>
+                                            <tr>
+                                                <th>:القامة</th>
+                                                <td>{{ student.height|default_if_none:'' }} cm</td>
+                                            </tr>
+                                            <tr>
+                                                <th>:تموضع السرير</th>
+                                                <td>{{ student.bed_position|default_if_none:'' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>:مقاس الحذاء</th>
+                                                <td>{{ student.shoo_size|default_if_none:'' }}</td>
+                                            </tr>
+                                            {% if student.vision %}
+                                                <tr>
+                                                    <th>:الرؤية</th>
+                                                    <td>{{ student.vision }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if student.orphan_side %}
+                                                <tr>
+                                                    <th>:اليتم</th>
+                                                    <td>{{ student.orphan_side|default_if_none:'' }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if student.chronic_disease %}
+                                                <tr>
+                                                    <th>:مرض مزمن</th>
+                                                    <td class="text-danger">{{ student.chronic_disease }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            <tr>
+                                                <th>:الهواية</th>
+                                                <td>{{ student.hobby|default_if_none:'' }}</td>
+                                            </tr>
+                                            {% if student.status %}
+                                                <tr>
+                                                    <th>:الحالة</th>
+                                                    <td>{{ student.status }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
+
+{% endblock content_body %}
+
+{% block extra_js %}
+    <script>
+        // Delete student
+        function delete_instance() {
+            swal({
+                title: "تحذير",
+                text: "هل أنت متأكد من مسح بينات التلميذ{% if student.sex == 'f' %}ة{% endif %} ؟",
+                icon: "error",
+                buttons: ['إلغاء', 'نعم'],
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $('body').append(`
+                        <form method="POST" id="delete_form">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete">
+                        </form>
+                    `);
+                    let form = $("#delete_form");
+                    form.append($(".item_select").clone());
+                    form.submit();
+                }
+            });
+        }
+    </script>
+{% endblock extra_js %}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+{% block modals %}
 {#    MODALS #}
-    <div class="modal fade rtl" style="direction: rtl;" id="delete_confirmation_modal" tabindex="-1" role="dialog" aria-labelledby="delete_confirmation_modalLabel" aria-hidden="true">
+    <div class="modal fade" id="delete_confirmation_modal" tabindex="-1" role="dialog" aria-labelledby="delete_confirmation_modalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -102,10 +193,4 @@
             </div>
         </div>
     </div>
-{% endblock content_body %}
-
-{% block js %}
-    <script>
-
-    </script>
-{% endblock js %}
+{% endblock modals %}

@@ -35,3 +35,7 @@
 .navigation-main .nav-item i {
     font-size: 18px;
 }
+
+.form-control {
+    line-height: 1.35;
+}

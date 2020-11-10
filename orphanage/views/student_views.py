@@ -100,7 +100,8 @@ def student_insert(request):
 
     context = {
         'form': form,
-        'page_title': 'Student insert'
+        'page_title': 'Student insert',
+        'page_title_ar': f'إضافة تلميذ(ة)'
     }
 
     return render(request, 'orphanage/student/student_update.html', context)
@@ -111,6 +112,7 @@ def student_insert(request):
 def student_details(request, student_id):
     
     student = get_object_or_404(Student, id=student_id)
+    student_title = 'التلميذ' if student.sex == 'm' else 'التلميذة'
 
     if request.method == 'POST':
         if request.POST['action'] == 'delete':
@@ -119,7 +121,8 @@ def student_details(request, student_id):
 
     context = {
         'student': student,
-        'page_title': 'Student details'
+        'page_title': 'Student details',
+        'page_title_ar': f'بيانات {student_title} {student}'
     }
 
     return render(request, 'orphanage/student/student_details.html', context)
@@ -139,13 +142,14 @@ def student_update(request, student_id):
             student_title = 'الطفل' if student.sex == 'm' else 'الطفلة'
             messages.success(request, 'تمت عملية تحديث بيانات ' + student_title + ' بنجاح.')
             return redirect(reverse('orphanage:student_details', args=[student.id]))
-        messages.error(request, 'المرجو مراجعة بيانات التلميذ(ة)')
+        messages.error(request, f'المرجو مراجعة بيانات التلميذ(ة) {form.errors}')
     else:
         form = StudentForm(instance=student, initial={'birthday': student.birthday})
 
     context = {
         'form': form,
-        'page_title': 'Student update'
+        'page_title': 'Student update',
+        'page_title_ar': f'تحديث بيانات التلاميذ {student}'
     }
 
     return render(request, 'orphanage/student/student_update.html', context)
@@ -164,7 +168,8 @@ def student_marks(request, student_id):
 
     context = {
         'student': student,
-        'page_title': 'Student details'
+        'page_title': 'Student marks',
+        'page_title_ar': f'علامات التلاميذ {student}'
     }
 
     return render(request, 'orphanage/student/student_marks.html', context)

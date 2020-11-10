@@ -253,10 +253,13 @@
       </span>
     </p>
   </footer>
+
+  {% block modals %}
+    <!-- Insert modals here -->
+  {% endblock modals %}
   
   <!-- BEGIN VENDOR JS-->
   <script src="{% static 'orphanage/app-assets/vendors/js/vendors.min.js' %}" type="text/javascript"></script>
-  <script src="{% static 'orphanage/app-assets/js/scripts/extensions/toastr.js' %}" type="text/javascript"></script>
   <script src="{% static 'orphanage/app-assets/vendors/js/extensions/toastr.min.js' %}" type="text/javascript"></script>
   <!-- BEGIN VENDOR JS-->
   

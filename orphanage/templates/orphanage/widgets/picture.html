@@ -1,25 +1,11 @@
-<div class="fileinput fileinput-new input-group {{ widget.attrs.class }}" data-provides="fileinput">
-    <div class="form-control text-truncate" data-trigger="fileinput">
-        <i class="glyphicon glyphicon-file fileinput-exists"></i>
-        <span class="fileinput-filename"></span>
-    </div>
-    <span class="input-group-append">
-        <span class=" btn btn-primary btn-file">
-            <span class="fileinput-new">إختر الصورة</span>
-            <span class="fileinput-exists">تغيير الصورة</span>
-            <input type="{{ widget.type }}" name="{{ widget.name }}" {% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %} {% include "django/forms/widgets/attrs.html" %}>
-        </span>
-        <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">X</a>
-    </span>
-</div>
 
-{#{% if widget.is_initial %}#}
-{#    {{ widget.initial_text }}: <a href="{{ widget.value.url }}">{{ widget.value }}</a>#}
-{#    {% if not widget.required %}#}
-{#        <label for="{{ widget.checkbox_id }}">{{ widget.clear_checkbox_label }}</label>#}
-{#        <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}">#}
-{#    {% endif %}#}
-{#    <br>#}
-{#    {{ widget.input_text }}:#}
-{#{% endif %}#}
-{#<input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>#}
+<!-- {% if widget.is_initial %}
+    {{ widget.initial_text }}: <a href="{{ widget.value.url }}">{{ widget.value }}</a>
+    {% if not widget.required %}
+        <label for="{{ widget.checkbox_id }}">{{ widget.clear_checkbox_label }}</label>
+        <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}">
+    {% endif %}
+    <br>
+    {{ widget.input_text }}:
+{% endif %} -->
+<input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>

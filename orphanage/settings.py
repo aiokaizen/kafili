@@ -17,7 +17,7 @@ GUARDIAN_STATUS_CHOICES = getattr(settings, 'GUARDIAN_STATUS_CHOICES', (
 
 STATUS_CHOICES = getattr(settings, 'STATUS_CHOICES', (
     ('', 'إختر من القائمة'),
-    ('new', 'وافد'),
+    ('new', 'مستجد'),
     ('left', 'مغادر'),
     ('dropped', 'منقطع'),
 ))
