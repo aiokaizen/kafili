@@ -2,7 +2,8 @@ from datetime import datetime
 
 from django import forms
 
-from orphanage.models import Student, Grade, Year, Guardian
+from orphanage import settings as orphanage_settings
+from orphanage.models import Child, Student, Grade, Year, Guardian
 from orphanage.widgets import DateWidget, ImageWidget
 
 
@@ -39,13 +40,15 @@ class RegistrationForm(forms.ModelForm):
         }
 
 
-class StudentForm(forms.ModelForm):
+class ChildForm(forms.ModelForm):
 
-    birthday = forms.DateField(label='تاريخ الإزدياد', input_formats=['%d/%m/%Y', ],
-                               widget=DateWidget(format='%d/%m/%Y', attrs={'class': 'form-control'}))
+    birthday = forms.DateField(
+        label='تاريخ الإزدياد', input_formats=['%d/%m/%Y', ],
+        widget=DateWidget(format='%d/%m/%Y', attrs={'class': 'form-control'})
+    )
 
     class Meta:
-        model = Student
+        model = Child
 
         fields = [
             'subscription_id',
@@ -53,7 +56,6 @@ class StudentForm(forms.ModelForm):
             'last_name',
             'picture',
             'sex',
-            'grade',
             'phone_number',
             'village',
             'weight',
@@ -72,8 +74,7 @@ class StudentForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'picture': ImageWidget(attrs={'class': 'custom-file-input'}),
-            'sex': forms.Select(choices=Student.SEX_CHOICES, attrs={'class': 'form-control'}),
-            'grade': forms.TextInput(attrs={'class': 'form-control'}),
+            'sex': forms.Select(choices=orphanage_settings.SEX_CHOICES, attrs={'class': 'form-control'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
             'village': forms.TextInput(attrs={'class': 'form-control'}),
             'weight': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -81,7 +82,7 @@ class StudentForm(forms.ModelForm):
             'bed_position': forms.TextInput(attrs={'class': 'form-control'}),
             'shoo_size': forms.TextInput(attrs={'class': 'form-control'}),
             'vision': forms.TextInput(attrs={'class': 'form-control'}),
-            'orphan_side': forms.Select(choices=Student.ORPHAN_CHOICES, attrs={'class': 'form-control'}),
+            'orphan_side': forms.Select(choices=orphanage_settings.ORPHAN_CHOICES, attrs={'class': 'form-control'}),
             'chronic_disease': forms.TextInput(attrs={'class': 'form-control'}),
             'hobby': forms.TextInput(attrs={'class': 'form-control'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
@@ -100,17 +101,36 @@ class StudentForm(forms.ModelForm):
         return cleaned_data
 
 
+class ChildFilterForm(forms.Form):
+
+    subscription_id = forms.IntegerField(label="رقم التسجيل", widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    name = forms.CharField(label="الإسم الكامل", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    sex = forms.ChoiceField(label="الجنس", choices=orphanage_settings.SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
+    village = forms.CharField(label="الدوار", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    shoo_size = forms.CharField(label="مقاس الحذاء", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    vision = forms.CharField(label="الرؤية", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    orphan_side = forms.ChoiceField(label="اليتم", choices=orphanage_settings.ORPHAN_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
+    chronic_disease = forms.CharField(label="مرض مزمن", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    hobby = forms.CharField(label="الهواية", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    status = forms.CharField(label="الحالة", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+
+
+class StudentForm(forms.ModelForm):
+    
+    class Meta:
+        model = Student
+
+        fields = []
+
+        # widgets = {
+        #     'child': forms.Select(attrs={'class': 'form-control'}),
+        # }
+
+
 class StudentFilterForm(forms.Form):
 
     subscription_id = forms.IntegerField(label="رقم التسجيل", widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     name = forms.CharField(label="الإسم الكامل", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
-    sex = forms.ChoiceField(label="الجنس", choices=Student.SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
-    village = forms.CharField(label="الدوار", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
-    shoo_size = forms.CharField(label="مقاس الحذاء", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
-    vision = forms.CharField(label="الرؤية", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
-    orphan_side = forms.ChoiceField(label="اليتم", choices=Student.ORPHAN_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
-    chronic_disease = forms.CharField(label="مرض مزمن", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
-    hobby = forms.CharField(label="الهواية", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     status = forms.CharField(label="الحالة", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
 
 

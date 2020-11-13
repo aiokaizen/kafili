@@ -9,25 +9,12 @@ from django.contrib.auth.models import User
 from orphanage import settings as orphanage_settings
 
 
-class Student(models.Model):
+class Child(models.Model):
 
     class Meta:
-        verbose_name = 'تلميذ'
+        verbose_name = 'طفل'
         verbose_name_plural = 'أطفال'
         ordering = ('first_name', 'last_name')
-
-    SEX_CHOICES = (
-        ('', 'إختر من القائمة'),
-        ('m', 'ذكر'),
-        ('f', 'أنثى')
-    )
-
-    ORPHAN_CHOICES = (
-        ('', 'إختر من القائمة'),
-        ('mother', 'الأم'),
-        ('father', 'الأب'),
-        ('both', 'الأم و الأب')
-    )
 
     # TODO: add this field in insert and update templates and forms
     subscription_id = models.PositiveIntegerField('رقم الإنخراط', unique=True, null=True, blank=True)
@@ -35,7 +22,7 @@ class Student(models.Model):
     last_name = models.CharField('اللقب', max_length=255)
     full_name = models.CharField('الإسم الكامل', max_length=255, null=True, blank=True)
     picture = models.ImageField('الصورة', upload_to='images/students', null=True, blank=True)
-    sex = models.CharField('الجنس', max_length=1, choices=SEX_CHOICES, null=True, blank=True)
+    sex = models.CharField('الجنس', max_length=1, choices=orphanage_settings.SEX_CHOICES, null=True, blank=True)
     grade = models.CharField('المستوى الدراسي', max_length=10, null=True, blank=True)
     birthday = models.DateField('تاريخ الإزدياد', null=True, blank=True)
     phone_number = models.CharField('رقم الهاتف', max_length=25, null=True, blank=True)
@@ -45,10 +32,10 @@ class Student(models.Model):
     bed_position = models.CharField('تموضع السرير', max_length=15, null=True, blank=True)
     shoo_size = models.CharField('مقاس الحذاء', max_length=8, null=True, blank=True)
     vision = models.CharField('الرؤية', max_length=55, null=True, blank=True)
-    orphan_side = models.CharField('اليتم', choices=ORPHAN_CHOICES, max_length=10, null=True, blank=True)
+    orphan_side = models.CharField('اليتم', choices=orphanage_settings.ORPHAN_CHOICES, max_length=10, null=True, blank=True)
     chronic_disease = models.CharField('مرض مزمن', max_length=55, null=True, blank=True)
     hobby = models.CharField('الهواية', max_length=25, null=True, blank=True)
-    status = models.CharField('الحالة', max_length=10, choices=orphanage_settings.STATUS_CHOICES, null=True, blank=True)
+    status = models.CharField('الحالة', max_length=10, choices=orphanage_settings.STATUS_CHOICES, default="", blank=True)
 
     # Functions
     def __str__(self):
@@ -128,7 +115,7 @@ class Student(models.Model):
         students = cls.objects.all()
 
         basedir = settings.BASE_DIR
-        path = basedir + f'{settings.MEDIA_URL}images/students'
+        path = basedir + f'{settings.MEDIA_URL}images/children'
         if not os.path.exists(path):
             os.mkdir(path)
         not_imported = []
@@ -142,7 +129,7 @@ class Student(models.Model):
                     continue
                 student = students.get(id=value)
                 if not student.picture or 1:
-                    img_path = f'images/students/{img}'
+                    img_path = f'images/children/{img}'
                     student.picture = img_path
                     student.save(update_fields=['picture', ])
                     print(student)
@@ -160,6 +147,63 @@ class Student(models.Model):
 
         message = f"لقد تم إستيراد {success_import_count} صورة."
         return True, message, err_message
+
+
+class Student(models.Model):
+
+    class Meta:
+        verbose_name = 'تلميذ'
+        verbose_name_plural = 'تلاميذ'
+        ordering = ('child', )
+
+    child = models.ForeignKey(Child, verbose_name="الطفل", on_delete=models.PROTECT)
+    grade = models.ForeignKey('Grade', verbose_name="المستوى الدراسي", on_delete=models.PROTECT)
+    s1_mark = models.DecimalField('نقطة الدورة الأولى', max_digits=4, decimal_places=2, null=True, blank=True)
+    s2_mark = models.DecimalField('نقطة الدورة الثانية', max_digits=4, decimal_places=2, null=True, blank=True)
+    year_mark = models.DecimalField('معدل السنة', max_digits=4, decimal_places=2, null=True, blank=True)
+    status = models.CharField('الحالة', max_length=10, choices=orphanage_settings.STUDENT_STATUS_CHOICES, default='passed', blank=True)
+
+    # Functions
+    def __str__(self):
+        return f"{self.child} - {self.grade}"
+
+    # def save(self, *args, **kwargs):
+    #     if self.full_name != self.first_name + ' ' + self.last_name:
+    #         self.update_full_name()
+    #     super(Student, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        super(Student, self).delete(*args, **kwargs)
+
+    @classmethod
+    def delete_students(cls, students):
+        res, message = True, "لقد تمت العملية بنجاح."
+        for student in students:
+            student.delete()
+        return res, message
+
+    @classmethod
+    def list(cls, **kwargs):
+
+        filters = Q()
+        if 's_query' in kwargs:
+            name = kwargs['s_query'][0]
+            filters = Q(child_first_name__icontains=name) | Q(child_last_name__icontains=name) | Q(child_full_name__icontains=name)
+        if 'name' in kwargs:
+            name = kwargs['name'][0]
+            filters = Q(child_first_name__icontains=name) | Q(child_last_name__icontains=name) | Q(child_full_name__icontains=name)
+        if 'ids' in kwargs:
+            ids = kwargs['ids']
+            filters &= Q(id__in=ids)
+
+        if 'subscription_id' in kwargs and kwargs['subscription_id'][0]:
+            subscription_id = kwargs['subscription_id'][0]
+            filters = Q(subscription_id=subscription_id)
+        if 'status' in kwargs and kwargs['status'][0]:
+            status = kwargs['status'][0]
+            filters = Q(status=status)
+
+        return cls.objects.filter(filters)
 
 
 class Year(models.Model):
@@ -182,6 +226,8 @@ class Grade(models.Model):
         verbose_name_plural = 'المستويات الدراسية'
     
     title = models.CharField('المستوى', max_length=255)
+    level = models.PositiveSmallIntegerField('المستوى')
+    year = models.ForeignKey(Year, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"{self.title}"
@@ -197,20 +243,21 @@ class Grade(models.Model):
         return cls.objects.filter(filters)
 
 
-class Registration(models.Model):
+# class Registration(models.Model):
     
-    class Meta:
-        verbose_name = 'الملف الدراسي'
-        verbose_name_plural = 'الملفات الدراسية'
+#     class Meta:
+#         verbose_name = 'الملف الدراسي'
+#         verbose_name_plural = 'الملفات الدراسية'
     
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    grade = models.ForeignKey(Grade, on_delete=models.PROTECT)
-    year = models.ForeignKey(Year, on_delete=models.PROTECT)
-    s1_mark = models.DecimalField('نقطة الدورة الأولى', max_digits=4, decimal_places=2)
-    s2_mark = models.DecimalField('نقطة الدورة الثانية', max_digits=4, decimal_places=2)
+#     student = models.ForeignKey(Student, on_delete=models.CASCADE)
+#     grade = models.ForeignKey(Grade, on_delete=models.PROTECT)
+#     year = models.ForeignKey(Year, on_delete=models.PROTECT)
+#     s1_mark = models.DecimalField('نقطة الدورة الأولى', max_digits=4, decimal_places=2)
+#     s2_mark = models.DecimalField('نقطة الدورة الثانية', max_digits=4, decimal_places=2)
+#     year_mark = models.DecimalField('معدل السنة', max_digits=4, decimal_places=2)
 
-    def __str__(self):
-        return f"{self.student}"
+#     def __str__(self):
+#         return f"{self.student}"
 
 
 class Subject(models.Model):
@@ -233,12 +280,12 @@ class Mark(models.Model):
         verbose_name = 'النقطة'
         verbose_name_plural = 'النقط'
 
-    registration = models.ForeignKey(Registration, on_delete=models.PROTECT)
+    student = models.ForeignKey(Student, on_delete=models.PROTECT)
     subject = models.ForeignKey(Subject, on_delete=models.PROTECT)
     mark = models.DecimalField('النقطة', max_digits=4, decimal_places=2)
 
     def __str__(self):
-        return f"{self.registration} - {self.subject}"
+        return f"{self.student} - {self.subject}"
 
 
 class Guardian(User):

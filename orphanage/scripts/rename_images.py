@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # tmp/test_script.py
-# Usage : This script renames all images in 'media/images/students' from full_name.ext to subscription_id.ext
+# Usage : This script renames all images in 'media/images/children' from full_name.ext to subscription_id.ext
 
 import os
 from datetime import datetime
@@ -10,7 +10,8 @@ import django
 os.environ["DJANGO_SETTINGS_MODULE"] = "kafili.settings"
 django.setup()
 
-
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from orphanage.models import *
 
 start = datetime.now()
@@ -19,10 +20,10 @@ start = datetime.now()
 # ----------------------------------------------------------------
 
 
-students = Student.objects.all()
+children = Child.objects.all()
 
 basedir = settings.BASE_DIR
-path = basedir + f'{MEDIA_URL}images/students'
+path = basedir + f'{settings.MEDIA_URL}images/children'
 if not os.path.exists(path):
     os.mkdir(path)
 images_non_importees = []
@@ -33,9 +34,9 @@ for img in os.listdir(path):
     try:
         value = img.split('.')[0]
 
-        student = students.get(full_name=value)
+        child = children.get(full_name=value)
 
-        new_name = f'{student.id}.{img.split(".")[1]}'
+        new_name = f'{child.id}.{img.split(".")[1]}'
         os.rename(f'{path}/{img}', f'{path}/{new_name}')
         print(f'renamed_file: /{img} > /{new_name}')
 
