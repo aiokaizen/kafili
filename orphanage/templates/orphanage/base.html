@@ -12,7 +12,7 @@
   <meta name="keywords"
     content="admin template, stack admin template, dashboard template, flat admin template, responsive admin template, web app">
   <meta name="author" content="PIXINVENT">
-  <title>{% if page_title %}{{ page_title }}{% else %}Kafili - Orphanage management system{% endif %}</title>
+  <title>{% if page_title_ar %}{{ page_title_ar }}{% else %}Kafili - Orphanage management system{% endif %}</title>
   <link rel="apple-touch-icon" href="{% static 'orphanage/app-assets/images/ico/apple-icon-120.png' %}">
   <link rel="shortcut icon" type="image/x-icon" href="{% static 'orphanage/app-assets/images/ico/favicon.ico' %}">
   <link
@@ -142,20 +142,20 @@
         </li> -->
         <li class="nav-item">
           <a>
-            <i class="ft-users"></i><span class="menu-title" data-i18n="">التلاميذ</span>
+            <i class="ft-users"></i><span class="menu-title" data-i18n="">الأطفال</span>
           </a>
           <ul class="menu-content">
             <li>
-              <a class="menu-item" href="{% url 'orphanage:students' %}">
+              <a class="menu-item" href="{% url 'orphanage:children' %}">
                 <span class="menu-title" data-i18n="">
-                  لائحة التلاميذ
+                  لائحة الأطفال
                 </span>
               </a>
             </li>
             <li>
-              <a class="menu-item" href="{% url 'orphanage:student_insert' %}">
+              <a class="menu-item" href="{% url 'orphanage:child_insert' %}">
                 <span class="menu-title" data-i18n="">
-                  إضافة تلميذ
+                  إضافة طفل
                 </span>
               </a>
             </li>
@@ -245,8 +245,8 @@
   <footer class="footer footer-static footer-light navbar-border">
     <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
       <span class="float-md-left d-block d-md-inline-block">
-        Copyright &copy; 2018 <a class="text-bold-800 grey darken-2"
-          href="https://themeforest.net/user/pixinvent/portfolio?ref=pixinvent" target="_blank">PIXINVENT </a>, All
+        Copyright &copy; {% now 'Y' %} <a class="text-bold-800 grey darken-2"
+          href="https://mouadk.com" target="_blank">MOUAD KOMMIR </a>, All
         rights reserved. </span>
       <span class="float-md-right d-block d-md-inline-block d-none d-lg-block">
         Hand-crafted & Made with <i class="ft-heart pink"></i>
@@ -280,7 +280,7 @@
             "positionClass": "toast-top-left",
             "showDuration": "100",
             "hideDuration": "1000",
-            "timeOut": "3000",
+            "timeOut": "10000",
             "extendedTimeOut": "1000",
             "rtl": true,
         };

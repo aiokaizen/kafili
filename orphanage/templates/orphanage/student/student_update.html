@@ -20,7 +20,7 @@
 
 {% block header_actions %}
     <div class="btn-group float-md-right" role="group" aria-label="Button group with nested dropdown">
-        <a class="btn btn-outline-primary" href="{% if form.instance.id %}{%  url 'orphanage:student_details' form.instance.id %}{% else %}{%  url 'orphanage:students' %}{% endif %}">
+        <a class="btn btn-outline-primary" href="{% if form.instance.id %}{%  url 'orphanage:student_details' grade.id form.instance.id %}{% else %}{%  url 'orphanage:students'grade.id  %}{% endif %}">
             <i class="ft-x"></i> إلغاء
         </a>
     </div>
@@ -274,7 +274,7 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <a class="btn btn-secondary font-weight-bold" href="{% if form.instance.id %}{%  url 'orphanage:student_details' form.instance.id %}{% else %}{%  url 'orphanage:students' %}{% endif %}">
+                                <a class="btn btn-secondary font-weight-bold" href="{% if form.instance.id %}{%  url 'orphanage:student_details' grade.id form.instance.id %}{% else %}{%  url 'orphanage:students' grade.id %}{% endif %}">
                                     إلغاء
                                 </a>
                                 <button class="btn btn-primary font-weight-bold" type="submit">{% if form.instance.id %}تحديث{% else %}إضافة{% endif %}</button>

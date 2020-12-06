@@ -7,15 +7,6 @@ TABLE_SIZE = getattr(settings, 'TABLE_SIZE', 10)
 BREADCRUMBS_DEPTH_LEVEL = getattr(settings, 'BREADCRUMBS_DEPTH_LEVEL', 3)
 
 
-# Guardian settings
-GUARDIAN_STATUS_CHOICES = getattr(settings, 'GUARDIAN_STATUS_CHOICES', (
-    ('', 'إختر من القائمة'),
-    ('pending', 'في إنتظار الموافقة'),
-    ('accepted', 'طلب مقبول'),
-    ('accepted', 'طلب مرفوض'),
-))
-
-
 # Child settings
 SEX_CHOICES = (
     ('', 'إختر من القائمة'),
@@ -44,4 +35,24 @@ STUDENT_STATUS_CHOICES = getattr(settings, 'STUDENT_STATUS_CHOICES', (
     ('new', 'مستجد'),
     ('passed', 'متأهل'),
     ('repeated', 'مكرر'),
+))
+
+
+# Grade settings
+GRADE_LEVEL_CHOICES = getattr(settings, 'GRADE_LEVEL_CHOICES', (
+    (1, 'الأول'),
+    (2, 'الثاني'),
+    (3, 'الثالث'),
+    (4, 'الرابع'),
+    (5, 'الخامس'),
+    (6, 'السادس'),
+    (7, 'السابع'),
+))
+
+# Guardian settings
+GUARDIAN_STATUS_CHOICES = getattr(settings, 'GUARDIAN_STATUS_CHOICES', (
+    ('', 'إختر من القائمة'),
+    ('pending', 'في إنتظار الموافقة'),
+    ('accepted', 'طلب مقبول'),
+    ('accepted', 'طلب مرفوض'),
 ))

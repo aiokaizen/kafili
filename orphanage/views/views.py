@@ -9,8 +9,8 @@ from django.urls import reverse
 from django.contrib.auth import logout as django_logout
 
 from orphanage.decorators import valid_session
-from orphanage.forms import ConnectionForm, RegistrationForm, StudentForm
-from orphanage.models import Student, Year, Grade, Subject, Guardian
+from orphanage.forms import ConnectionForm, RegistrationForm
+from orphanage.models import Child, Year, Grade, Subject, Guardian
 
 
 def connexion(request):
@@ -26,7 +26,6 @@ def connexion(request):
             url = request.GET.get('next') if 'next' in request.GET else reverse('orphanage:home')
             return redirect(url)
         else:
-            print('adding form error')
             form.add_error('username', 'إسم المستخدم أو كلمة المرور خاطئة.')
     else:
         form = ConnectionForm()
@@ -73,7 +72,7 @@ def logout(request):
 @valid_session
 def home(request):
     
-    students_count = Student.objects.count()
+    children_count = Child.objects.count()
     grades_count = Grade.objects.count()
     subjects_count = Subject.objects.count()
     guardians_count = Guardian.objects.count()
@@ -81,7 +80,7 @@ def home(request):
     context = {
         'page_title': 'Home',
         'page_title_ar': 'الصفحة الرئيسية',
-        'students_count': students_count,
+        'children_count': children_count,
         'grades_count': grades_count,
         'subjects_count': subjects_count,
         'guardians_count': guardians_count,

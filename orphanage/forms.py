@@ -3,7 +3,7 @@ from datetime import datetime
 from django import forms
 
 from orphanage import settings as orphanage_settings
-from orphanage.models import Child, Student, Grade, Year, Guardian
+from orphanage.models import Child, Student, Grade, Subject, Year, Guardian
 from orphanage.widgets import DateWidget, ImageWidget
 
 
@@ -138,9 +138,9 @@ class GradeForm(forms.ModelForm):
 
     class Meta:
         model = Grade
-        fields = '__all__'
+        fields = ('level', )
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'level': forms.Select(choices=orphanage_settings.GRADE_LEVEL_CHOICES, attrs={'class': 'form-control'}),
         }
 
 
@@ -151,4 +151,19 @@ class YearForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'year': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+
+# Subject forms
+class SubjectForm(forms.ModelForm):
+    
+    class Meta:
+        model = Subject
+
+        fields = ['title', 'code', 'coeff']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'code': forms.TextInput(attrs={'class': 'form-control'}),
+            'coeff': forms.NumberInput(attrs={'class': 'form-control'}),
         }

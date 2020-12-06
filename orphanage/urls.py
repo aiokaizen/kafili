@@ -12,14 +12,13 @@ urlpatterns = [
     url(r'^request_registration/$', request_registration, name='request_registration'),
     url(r'^profile/$', profile, name='profile'),
 
-    # students
-    url(r'^students/$', students, name='students'),
-    url(r'^students/insert/$', student_insert, name='student_insert'),
-    url(r'^students/print_cards/$', StudentCardPDF.as_view(), name='print_cards'),
-    url(r'^students/(?P<student_id>[0-9]+)/$', student_details, name='student_details'),
-    url(r'^students/(?P<student_id>[0-9]+)/print_card/$', StudentCardPDF.as_view(), name='print_card'),
-    url(r'^students/(?P<student_id>[0-9]+)/update/$', student_update, name='student_update'),
-    url(r'^students/(?P<student_id>[0-9]+)/marks/$', student_marks, name='student_marks'),
+    # Children
+    url(r'^children/$', children, name='children'),
+    url(r'^children/insert/$', child_insert, name='child_insert'),
+    url(r'^children/print_cards/$', StudentCardPDF.as_view(), name='print_cards'),
+    url(r'^children/(?P<child_id>[0-9]+)/$', child_details, name='child_details'),
+    url(r'^children/(?P<child_id>[0-9]+)/print_card/$', StudentCardPDF.as_view(), name='print_card'),
+    url(r'^children/(?P<child_id>[0-9]+)/update/$', child_update, name='child_update'),
     
     # Guardians
     # url(r'^guardians/$', guardians, name='guardians'),
@@ -37,10 +36,17 @@ urlpatterns = [
     url(r'^grades/(?P<grade_id>[0-9]+)/$', grade_details, name='grade_details'),
     url(r'^grades/(?P<grade_id>[0-9]+)/update/$', grade_update, name='grade_update'),
     url(r'^grades/insert/$', grade_insert, name='grade_insert'),
-    
-    # Subjects
-    # url(r'^grades/(?P<grade_id>[0-9]+)/subjects/$', subjects, name='subjects'),
-    # url(r'^grades/(?P<grade_id>[0-9]+)/subjects/(?P<subject_id>[0-9]+)/$', subject_details, name='subject_details'),
-    # url(r'^grades/(?P<grade_id>[0-9]+)/subjects/(?P<subject_id>[0-9]+)/update/$', subject_update, name='subject_update'),
+
+    # Students
+    url(r'^grades/(?P<grade_id>[0-9]+)/students/$', students, name='students'),
+    url(r'^grades/(?P<grade_id>[0-9]+)/students/insert/$', student_insert, name='student_insert'),
+    url(r'^grades/(?P<grade_id>[0-9]+)/students/print_cards/$', StudentCardPDF.as_view(), name='print_cards'),
+    url(r'^grades/(?P<grade_id>[0-9]+)/students/(?P<student_id>[0-9]+)/$', student_details, name='student_details'),
+    url(r'^grades/(?P<grade_id>[0-9]+)/students/(?P<student_id>[0-9]+)/print_card/$', StudentCardPDF.as_view(), name='print_card'),
+    url(r'^grades/(?P<grade_id>[0-9]+)/students/(?P<student_id>[0-9]+)/update/$', student_update, name='student_update'),
+    url(r'^grades/(?P<grade_id>[0-9]+)/students/(?P<student_id>[0-9]+)/marks/$', student_marks, name='student_marks'),
+
+    # Website
     # url(r'^grades/(?P<grade_id>[0-9]+)/subjects/insert/$', subject_insert, name='subject_insert'),
+
 ]

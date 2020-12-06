@@ -1,0 +1,21 @@
+
+    <div class="modal fade rtl" style="direction: rtl;" id="delete_confirmation_modal" tabindex="-1" role="dialog" aria-labelledby="delete_confirmation_modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="delete_confirmation_modalLabel">{{ delete_msg }}</h5>
+                    <button type="button" class="close" style="margin: -1rem auto -1rem -1rem;" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-info" data-dismiss="modal">إلغاء</button>
+                        <input type="hidden" name="action" value="delete">
+                        <input type="submit" class="btn btn-danger" value="تأكيد">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

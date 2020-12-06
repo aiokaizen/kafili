@@ -1,6 +1,7 @@
 from .views import *
 from .printing import *
 from .error_handlers import *
+from .child_views import *
 from .student_views import *
 from .grade_views import *
 from .subject_views import *

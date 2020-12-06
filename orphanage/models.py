@@ -2,6 +2,7 @@ import os
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.utils import IntegrityError
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -51,20 +52,37 @@ class Child(models.Model):
         self.full_name = self.first_name + ' ' + self.last_name
         self.save(update_fields=['full_name', ])
 
+    def get_student(self, year=None):
+        if not year:
+            year = Year.objects.first()
+        return self.student_set.get(grade__year=year)
+
     # def save(self, *args, **kwargs):
     #     if self.full_name != self.first_name + ' ' + self.last_name:
     #         self.update_full_name()
     #     super(Student, self).save(*args, **kwargs)
 
+    def create_child(self):
+        self.save()
+
+    def update_child(self):
+        self.save()
+
+    def delete_child(self):
+        self.save()
+
     def delete(self, *args, **kwargs):
         super(Student, self).delete(*args, **kwargs)
 
     @classmethod
-    def delete_students(cls, students):
-        res, message = True, "لقد تمت العملية بنجاح."
-        for student in students:
-            student.delete()
-        return res, message
+    def delete_children(cls, children):
+        success, message = True, "لقد تمت العملية بنجاح."
+        for child in children:
+            success, msg = child.delete_child()
+            if not success:
+                message = msg
+                break
+        return success, message
 
     @classmethod
     def list(cls, **kwargs):
@@ -183,15 +201,15 @@ class Student(models.Model):
         return res, message
 
     @classmethod
-    def list(cls, **kwargs):
+    def list(cls, grade, **kwargs):
 
-        filters = Q()
+        filters = Q(grade=grade)
         if 's_query' in kwargs:
             name = kwargs['s_query'][0]
-            filters = Q(child_first_name__icontains=name) | Q(child_last_name__icontains=name) | Q(child_full_name__icontains=name)
+            filters &= Q(child_first_name__icontains=name) | Q(child_last_name__icontains=name) | Q(child_full_name__icontains=name)
         if 'name' in kwargs:
             name = kwargs['name'][0]
-            filters = Q(child_first_name__icontains=name) | Q(child_last_name__icontains=name) | Q(child_full_name__icontains=name)
+            filters &= Q(child_first_name__icontains=name) | Q(child_last_name__icontains=name) | Q(child_full_name__icontains=name)
         if 'ids' in kwargs:
             ids = kwargs['ids']
             filters &= Q(id__in=ids)
@@ -224,6 +242,8 @@ class Grade(models.Model):
     class Meta:
         verbose_name = 'المستوى الدراسي'
         verbose_name_plural = 'المستويات الدراسية'
+        ordering = ['level']
+        unique_together = ('level', 'year')
     
     title = models.CharField('المستوى', max_length=255)
     level = models.PositiveSmallIntegerField('المستوى')
@@ -231,14 +251,58 @@ class Grade(models.Model):
 
     def __str__(self):
         return f"{self.title}"
-
+    
+    def get_grade_title_from_level(self):
+        level = [title for lvl, title in orphanage_settings.GRADE_LEVEL_CHOICES if lvl == self.level][0]
+        return f"{level} إبتدائي"
+    
+    def students(self):
+        return self.student_set.all()
+    
+    def students_count(self):
+        return self.students().count()
+    
+    def create_grade(self, year):
+        try:
+            self.title = self.get_grade_title_from_level()
+            success, message = True, f"لقد تمت إضافة المستوى {self.title} بنجاح."
+            self.year = year
+            self.save()
+        except IntegrityError:
+            success, message = False, f"هذا المستوى مسجل بالفعل في هذه السنة الدراسية."
+        return success, message
+    
+    def update_grade(self):
+        try:
+            self.title = self.get_grade_title_from_level()
+            success, message = True, f"لقد تمت تحديث المستوى بنجاح."
+            self.save()
+        except IntegrityError:
+            success, message = False, f"هذا المستوى مسجل بالفعل في هذه السنة الدراسية."
+        return success, message
+    
+    def delete_grade(self):
+        grade = self.title
+        self.delete()
+        return True, f"لقد تمت إزالة المستوى {grade} بنجاح."
+    
     @classmethod
-    def list(cls, **kwargs):
+    def delete_grades(cls, grades):
+        success, message = True, f"لقد تمت إزالة المستويات بنجاح."
+        for grade in grades:
+            success, msg = grade.delete_grade()
+            if not success:
+                message = msg
+                break
+        return success, message
+        
+    @classmethod
+    def list(cls, year, **kwargs):
 
-        filters = Q()
+        filters = Q(year=year)
         if 'title' in kwargs:
             title = kwargs['title'][0]
-            filters = Q(title__icontains=title)
+            filters &= Q(title__icontains=title)
 
         return cls.objects.filter(filters)
 
@@ -269,9 +333,34 @@ class Subject(models.Model):
     title = models.CharField('العنوان', max_length=255)
     code = models.CharField('الرقم', max_length=10)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
+    coeff = models.PositiveSmallIntegerField('المعامل', default=0)
 
     def __str__(self):
         return f"{self.title}"
+    
+    def create_subject(self, grade):
+        success, message = True, f"لقد تمت إضافة  {self.title} بنجاح."
+        self.grade = grade
+        self.save()
+        return success, message
+    
+    def delete_subject(self):
+        subject = self.title
+        self.delete()
+        return True, f"لقد تمت إزالة {subject} بنجاح."
+        
+    @classmethod
+    def list(cls, grade, **kwargs):
+
+        filters = Q(grade=grade)
+        if 'title' in kwargs:
+            title = kwargs['title'][0]
+            filters &= Q(title__icontains=title)
+        if 'code' in kwargs:
+            code = kwargs['code'][0]
+            filters &= Q(code__icontains=code)
+
+        return cls.objects.filter(filters)
 
 
 class Mark(models.Model):

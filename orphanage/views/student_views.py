@@ -7,14 +7,15 @@ from django.urls import reverse
 from orphanage import settings as orphanage_settings
 from orphanage.decorators import valid_session
 from orphanage.forms import StudentForm, StudentFilterForm
-from orphanage.models import Student
+from orphanage.models import Student, Grade
 
 
 @login_required
 @valid_session
-def students(request):
+def students(request, grade_id):
 
-    qset = Student.list(**request.GET)
+    grade = get_object_or_404(Grade, pk=grade_id)
+    qset = Student.list(grade=grade, **request.GET)
 
     table_size = orphanage_settings.TABLE_SIZE
     if 'tablesize' in request.GET:
@@ -51,22 +52,23 @@ def students(request):
 
     # POST METHOD
     if request.method == 'POST':
-        if request.POST.get('action', '') == 'delete':
-            students = Student.objects.filter(pk__in=request.POST.getlist('students_ids', ''))
+        if request.POST.get('action', '') == 'delete_multiple':
+            students = Student.objects.filter(pk__in=request.POST.getlist('objects_ids', ''))
             res, message = Student.delete_students(students)
             if res:
                 messages.success(request, message)
             else:
                 messages.error(request, message)
-            return redirect(reverse('orphanage:students'))
+            return redirect(reverse('orphanage:students', args=[grade.id]))
         elif request.POST.get('action', '') == 'import_pictures':
             res, message, err_msg = Student.import_photos()
             messages.success(request, message)
             if err_msg:
                 messages.warning(request, err_msg)
-            return redirect(reverse('orphanage:students'))
+            return redirect(reverse('orphanage:students', args=[grade.id]))
 
     context = {
+        'grade': grade,
         'items': orphans_page,
         'table_size': table_size,
         'page': page,
@@ -84,22 +86,25 @@ def students(request):
 
 @login_required
 @valid_session
-def student_insert(request):
+def student_insert(request, grade_id):
+
+    grade = get_object_or_404(Grade, pk=grade_id)
     
     if request.method == 'POST':
         form = StudentForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.instance.birthday = form.cleaned_data['birthday']
             form.instance.save()
-            student_title = 'الطفل' if form.instance.sex == 'm' else 'الطفلة'
+            student_title = 'الطفل' if form.instance.child.sex == 'm' else 'الطفلة'
             messages.success(request, 'تمت إضافة ' + student_title + ' بنجاح.')
-            return redirect(reverse('orphanage:student_details', args=[form.instance.id]))
+            return redirect(reverse('orphanage:student_details', args=[grade.id, form.instance.id]))
         messages.error(request, 'المرجو مراجعة بيانات التلميذ(ة)')
     else:
         form = StudentForm()
 
     context = {
         'form': form,
+        'grade': grade,
         'page_title': 'Student insert',
         'page_title_ar': f'إضافة تلميذ(ة)'
     }
@@ -109,18 +114,20 @@ def student_insert(request):
 
 @login_required
 @valid_session
-def student_details(request, student_id):
-    
+def student_details(request, grade_id, student_id):
+
+    grade = get_object_or_404(Grade, pk=grade_id)
     student = get_object_or_404(Student, id=student_id)
-    student_title = 'التلميذ' if student.sex == 'm' else 'التلميذة'
+    student_title = 'التلميذ' if student.child.sex == 'm' else 'التلميذة'
 
     if request.method == 'POST':
         if request.POST['action'] == 'delete':
             student.delete()
-            return redirect(reverse('orphanage:students'))
+            return redirect(reverse('orphanage:students', args=[grade.id]))
 
     context = {
         'student': student,
+        'grade': grade,
         'page_title': 'Student details',
         'page_title_ar': f'بيانات {student_title} {student}'
     }
@@ -130,8 +137,9 @@ def student_details(request, student_id):
 
 @login_required
 @valid_session
-def student_update(request, student_id):
+def student_update(request, grade_id, student_id):
 
+    grade = get_object_or_404(Grade, pk=grade_id)
     student = get_object_or_404(Student, id=student_id)
 
     if request.method == 'POST':
@@ -139,15 +147,16 @@ def student_update(request, student_id):
         if form.is_valid():
             form.instance.birthday = form.cleaned_data['birthday']
             form.instance.save()
-            student_title = 'الطفل' if student.sex == 'm' else 'الطفلة'
+            student_title = 'الطفل' if student.child.sex == 'm' else 'الطفلة'
             messages.success(request, 'تمت عملية تحديث بيانات ' + student_title + ' بنجاح.')
-            return redirect(reverse('orphanage:student_details', args=[student.id]))
+            return redirect(reverse('orphanage:student_details', args=[grade.id, student.id]))
         messages.error(request, f'المرجو مراجعة بيانات التلميذ(ة) {form.errors}')
     else:
         form = StudentForm(instance=student, initial={'birthday': student.birthday})
 
     context = {
         'form': form,
+        'grade': grade,
         'page_title': 'Student update',
         'page_title_ar': f'تحديث بيانات التلاميذ {student}'
     }
@@ -157,17 +166,19 @@ def student_update(request, student_id):
 
 @login_required
 @valid_session
-def student_marks(request, student_id):
-    
+def student_marks(request, grade_id, student_id):
+
+    grade = get_object_or_404(Grade, pk=grade_id)
     student = get_object_or_404(Student, id=student_id)
 
     if request.method == 'POST':
         if request.POST['action'] == 'delete':
             student.delete()
-            return redirect(reverse('orphanage:students'))
+            return redirect(reverse('orphanage:students', args=[grade.id]))
 
     context = {
         'student': student,
+        'grade': grade,
         'page_title': 'Student marks',
         'page_title_ar': f'علامات التلاميذ {student}'
     }

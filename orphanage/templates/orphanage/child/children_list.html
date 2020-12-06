@@ -14,11 +14,11 @@
                 <i class="ft-more-vertical icon-left"></i> المزيد
             </button>
             <div class="dropdown-menu dropdown-menu-left" aria-labelledby="btnGroupDrop1" style="width: 175px;">
-                <a class="dropdown-item" onclick="delete_selected_students()">مسح التلاميذ المختارين</a>
+                <a class="dropdown-item" onclick="delete_selected_childs()">مسح التلاميذ المختارين</a>
                 <a class="dropdown-item" onclick="import_pictures()">استيراد الصور</a>
             </div>
         </div>
-        <a class="btn btn-outline-primary" href="{% url 'orphanage:student_insert' grade.id %}"><i class="ft-plus"></i></a>
+        <a class="btn btn-outline-primary" href="{% url 'orphanage:child_insert' %}"><i class="ft-plus"></i></a>
         <a class="btn btn-outline-primary" target="blank" href="{% url 'orphanage:print_cards' %}"><i class="ft-printer"></i></a>
     </div>
 {% endblock header_actions %}
@@ -63,31 +63,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for student in items %}
+                                            {% for child in items %}
                                                 <tr>
                                                     <td class="text-center">
                                                         <!-- <div class="icheck blue"> -->
-                                                            <input class="item_select" id="item_{{ student.id }}" type="checkbox" name="objects_ids" value="{{ student.id }}">
-                                                            <!-- <label for="item_{{ student.id }}"></label> -->
+                                                            <input class="item_select" id="item_{{ child.id }}" type="checkbox" name="objects_ids" value="{{ child.id }}">
+                                                            <!-- <label for="item_{{ child.id }}"></label> -->
                                                         <!-- </div> -->
                                                     </td>
                                                     <td class="text-center">
-                                                        <img style="width: 30px;" src="{% if student.child.picture %}{{ student.child.picture.url }}{% else %}/static/orphanage/img/default/{% if student.child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}">
+                                                        <img style="width: 30px;" src="{% if child.picture %}{{ child.picture.url }}{% else %}/static/orphanage/img/default/{% if child.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}">
                                                     </td>
                                                     <td>
-                                                        <a href="{% url 'orphanage:student_details' grade.id student.id %}">
-                                                            {% if student.child.first_name and student.child.last_name%}
-                                                                {{ student.child.first_name }} {{ student.child.last_name }}
+                                                        <a href="{% url 'orphanage:child_details' child.id %}">
+                                                            {% if child.first_name and child.last_name%}
+                                                                {{ child.first_name }} {{ child.last_name }}
                                                             {% else %}
-                                                                {{ student.child.full_name }}
+                                                                {{ child.full_name }}
                                                             {% endif %}
                                                         </a>
                                                     </td>
-                                                    <td>{{ student.grade|default_if_none:'' }}</td>
-                                                    <td>{{ student.child.birthday|date:'Y/m/d'|default_if_none:'' }}</td>
-                                                    <td>{{ student.child.phone_number|default_if_none:'' }}</td>
-                                                    <td>{{ student.child.village|default_if_none:'' }}</td>
-                                                    <td>{{ student.child.hobby|default_if_none:'' }}</td>
+                                                    <td>{{ child.get_student.grade|default_if_none:'' }}</td>
+                                                    <td>{{ child.birthday|date:'Y/m/d'|default_if_none:'' }}</td>
+                                                    <td>{{ child.phone_number|default_if_none:'' }}</td>
+                                                    <td>{{ child.village|default_if_none:'' }}</td>
+                                                    <td>{{ child.hobby|default_if_none:'' }}</td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -119,15 +119,15 @@
         let csrf_token = '{% csrf_token %}';
 
         // Functions
-        // print students's cards
+        // print childs's cards
         function print() {
-            let form = $('#students_form');
+            let form = $('#childs_form');
             form.append('<input type="hidden" name="action" value="print">');
             form.submit();
         }
 
-        // Delete students
-       function delete_selected_students() {
+        // Delete childs
+       function delete_selected_childs() {
             delete_selected_items("هل أنت متأكد من مسح التلاميذ المختارين ؟");
        }
 

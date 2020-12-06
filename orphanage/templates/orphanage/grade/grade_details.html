@@ -1,69 +1,194 @@
 {% extends 'orphanage/base.html' %}
+{% load static %}
 
-{% block stylesheets %}
+
+{% block extra_css %}
     <style>
-        img {
-            width: 100%;
+        .inner-nav ul {
+            list-style: none;
         }
     </style>
-{% endblock stylesheets %}
+{% endblock extra_css %}
+
+
+{% block header_actions %}  
+    <div class="btn-group float-md-right" role="group" aria-label="Button group with nested dropdown">
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-primary dropdown-toggle dropdown-menu-left" id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="ft-more-vertical icon-left"></i> المزيد
+            </button>
+            <div class="dropdown-menu dropdown-menu-left" aria-labelledby="btnGroupDrop1" style="width: 175px;">
+                <a class="dropdown-item" onclick="delete_grade()">مسح المستوى الدراسي</a>
+            </div>
+        </div>
+        <a class="btn btn-outline-primary" href="{% url 'orphanage:grade_insert' %}"><i class="ft-plus"></i></a>
+        <a class="btn btn-outline-primary" href="{% url 'orphanage:grade_update' grade.id %}"><i class="ft-edit"></i></a>
+    </div>
+{% endblock header_actions %}
+
 
 {% block  content_body %}
-    <div class="page-content">
-        <div class="hk-pg-header mb-0">
-            <h4 class="hk-pg-title rtl font-weight-bold w-100 justify-content-end pr-4 pt-2 pb-0">
-                المعلومات الخاصة بالمستوى {{ grade }}
-            </h4>
-        </div>
 
-        <div class="container mt-3">
-            <div class="row infos rtl">
-                <div class="col-sm-12 basic-infos">
-                    <table class="rtl w-100 table-striped table-sm">
-                        <tr>
-                            <td>{{ grade.title }}</td>
-                            <th style="width: 150px;">:المستوى</th>
-                        </tr>
-                    </table>
+    <section id="javascript">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-content collpase show">
+                        <div class="card-body card-dashboard">
+                            <div class="container-fluid dt-bootstrap4 no-footer">
+                                <div class="container">
+                                    <div class="grade-menu">
+                                        <div class="row mb-5">
+                                            <!-- <div class="col-xl-4 col-lg-6 col-12">
+                                                <div class="card">
+                                                    <div class="card-content">
+                                                        <a href="{% url 'orphanage:students' grade.id %}" class="text-white">
+                                                            <div class="media align-items-stretch">
+                                                                <div class="p-2 text-center bg-primary bg-darken-2">
+                                                                    <i class="ft-users font-large-2 white"></i>
+                                                                </div>
+                                                                <div class="p-2 bg-gradient-x-primary white media-body">
+                                                                    <h2>لائحة التلاميذ</h2>
+                                                                    <h3 class="text-bold-400 mb-0">{{ students_count }}</h3>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            <div class="col-12 inner-nav">
+                                                <ul class="p-0">
+                                                    <li><a class="btn btn-dark" href="{% url 'orphanage:students' grade.id %}">لائحة التلاميذ</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="subjects">
+                                        <h1 class="font-weight-bold d-flex align-items-center">
+                                            <span>لائحة المواد الدراسية</span>
+                                            <button type="button" class="btn btn-outline-success font-weight-bold ml-2" data-toggle="modal" data-target="#subject-creation-modal">إضافة مادة دراسية</button>
+                                        </h1>
+                                        <table class="table table-striped table-bordered">
+                                            <thead class="thead-active">
+                                                <tr class="rtl">
+                                                    <th scope="col">إسم المادة</th>
+                                                    <th scope="col">رقم المادة</th>
+                                                    <th scope="col">المعامل</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for subject in subjects %}
+                                                    <tr class="rtl">
+                                                        <th><h3>{{ subject.title }}</h3></th>
+                                                        <td>{{ subject.code }}</td>
+                                                        <td>{{ subject.coeff }}</td>
+                                                        <td>
+                                                            <div class="btn-group" role="group">
+                                                                <button class="btn btn-outline-primary dropdown-toggle dropdown-menu-left" id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="ft-more-vertical"></i>
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="btnGroupDrop1" style="width: 175px;">
+                                                                    <a class="dropdown-item" onclick="delete_subject({{ subject.id }})">مسح المادة الدراسية</a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12 mt-2">
-                    <a class="btn btn-danger text-white font-weight-bold" data-toggle="modal" data-target="#delete_confirmation_modal">
-                        مسح البيانات
-                    </a>
-                    <a class="btn btn-primary font-weight-bold" href="{% url 'orphanage:grade_update' grade.id %}">تحديث البيانات</a>
-                </div>
-            </div>
         </div>
-    </div>
+    </section>
 
-
-{#    MODALS #}
-    <div class="modal fade rtl" style="direction: rtl;" id="delete_confirmation_modal" tabindex="-1" role="dialog" aria-labelledby="delete_confirmation_modalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="delete_confirmation_modalLabel">هل أنت متأكد من مسح بيانات التلميذ(ة)</h5>
-                    <button type="button" class="close" style="margin: -1rem auto -1rem -1rem;" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <button type="button" class="btn btn-info" data-dismiss="modal">إلغاء</button>
-                        <input type="hidden" name="action" value="delete">
-                        <input type="submit" class="btn btn-danger" value="نعم">
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock content_body %}
 
-{% block js %}
-    <script>
 
+{% block modals %}
+<div class="modal fade text-left" id="subject-creation-modal" tabindex="-1" role="dialog" aria-labelledby="subjectCreationModal" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="subject_creation_form" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_subject">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center" id="myModalLabel2">إضافة مادة دراسية</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="font-weight-bold" for="id_title">{{ subject_form.title.label }}</label>
+                        {{ subject_form.title }}
+                        {% if subject_form.title.errors %}
+                            <div class="invalid-feedback">
+                                {{ subject_form.title.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold" for="id_code">{{ subject_form.code.label }}</label>
+                        {{ subject_form.code }}
+                        {% if subject_form.code.errors %}
+                            <div class="invalid-feedback">
+                                {{ subject_form.code.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold" for="id_coeff">{{ subject_form.coeff.label }}</label>
+                        {{ subject_form.coeff }}
+                        {% if subject_form.coeff.errors %}
+                            <div class="invalid-feedback">
+                                {{ subject_form.coeff.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-start">
+                    <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-outline-primary">إضافة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+{% endblock modals %}
+
+
+{% block extra_js %}
+
+    <script>
+        // Global vars
+        let csrf_token = '{% csrf_token %}';
+
+        // Functions
+        function delete_grade() {
+            delete_instance('هل أنت متأكد من مسح المستوى الدراسي ؟');
+        }
+
+        // Functions
+        function delete_subject( subject_id ) {
+            delete_instance('هل أنت متأكد من مسح هذه المادة الدراسية ؟', 'delete_subject', subject_id);
+        }
     </script>
-{% endblock js %}
+
+    <script src="{% static 'orphanage/js/crud_functions.js' %}"></script>
+
+{% endblock extra_js %}
