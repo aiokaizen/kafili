@@ -52,7 +52,9 @@
                                                 {% if child.full_name %}{{ child.full_name }}
                                                     {% else %}{{ child.first_name }} {{ child.last_name }}{% endif %}
                                             </h3>
-                                            <h5 class="text-center">المستوى {{ child.grade|default_if_none:"-- " }}</h5>
+                                            {% if child.get_student %}
+                                                <h5 class="text-center">المستوى {{ child.get_student.grade|default_if_none:"-- " }}</h5>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="col-md-9 col-sm-12 basic-infos">

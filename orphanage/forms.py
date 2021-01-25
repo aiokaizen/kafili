@@ -91,7 +91,7 @@ class ChildForm(forms.ModelForm):
     def clean(self):
         cleaned_data = self.cleaned_data
         sub_id = self.cleaned_data.get('subscription_id')
-        count = len(Student.objects.filter(subscription_id=sub_id))
+        count = len(Child.objects.filter(subscription_id=sub_id))
         exists = True if (count > 1 and self.instance.id) or (count > 0 and not self.instance.id) else False
         try:
             if not sub_id or int(sub_id) < 1 or exists:
@@ -119,12 +119,38 @@ class StudentForm(forms.ModelForm):
     
     class Meta:
         model = Student
+        fields = [
+            'child', 's1_mark', 's2_mark', 'year_mark', 'status',
+        ]
 
-        fields = []
+        widgets = {
+            'child': forms.Select(attrs={'class': 'form-control select2'}),
+            's1_mark': forms.NumberInput(attrs={'class': 'form-control'}),
+            's2_mark': forms.NumberInput(attrs={'class': 'form-control'}),
+            'year_mark': forms.NumberInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+        }
 
-        # widgets = {
-        #     'child': forms.Select(attrs={'class': 'form-control'}),
-        # }
+    def clean_s1_mark(self):
+        mark = self.cleaned_data['s1_mark']
+        ceiling = self.instance.grade.mark_ceiling
+        if mark and mark > ceiling:
+            raise forms.ValidationError(f'نقطة غير مقبولة, المرجو إدخال قيمة موجبة أصغر من أو تساوي {ceiling}')
+        return mark
+
+    def clean_s2_mark(self):
+        mark = self.cleaned_data['s2_mark']
+        ceiling = self.instance.grade.mark_ceiling
+        if mark and mark > ceiling:
+            raise forms.ValidationError(f'نقطة غير مقبولة, المرجو إدخال قيمة موجبة أصغر من أو تساوي {ceiling}')
+        return mark
+
+    def clean_year_mark(self):
+        mark = self.cleaned_data['year_mark']
+        ceiling = self.instance.grade.mark_ceiling
+        if mark and mark > ceiling:
+            raise forms.ValidationError(f'نقطة غير مقبولة, المرجو إدخال قيمة موجبة أصغر من {ceiling}')
+        return mark
 
 
 class StudentFilterForm(forms.Form):

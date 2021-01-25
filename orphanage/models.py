@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
 
+from orphanage.services import calculate_decision
 from orphanage import settings as orphanage_settings
 
 
@@ -52,15 +53,17 @@ class Child(models.Model):
         self.full_name = self.first_name + ' ' + self.last_name
         self.save(update_fields=['full_name', ])
 
+    def get_students(self):
+        return self.student_set.all()
+
     def get_student(self, year=None):
         if not year:
             year = Year.objects.first()
-        return self.student_set.get(grade__year=year)
-
-    # def save(self, *args, **kwargs):
-    #     if self.full_name != self.first_name + ' ' + self.last_name:
-    #         self.update_full_name()
-    #     super(Student, self).save(*args, **kwargs)
+        students = self.get_students()
+        if students:
+            return students.get(grade__year=year)
+        else:
+            return None
 
     def create_child(self):
         self.save()
@@ -177,18 +180,30 @@ class Student(models.Model):
     child = models.ForeignKey(Child, verbose_name="الطفل", on_delete=models.PROTECT)
     grade = models.ForeignKey('Grade', verbose_name="المستوى الدراسي", on_delete=models.PROTECT)
     s1_mark = models.DecimalField('نقطة الدورة الأولى', max_digits=4, decimal_places=2, null=True, blank=True)
+    s1_decision = models.CharField('ميزة الدورة الأولى', max_length=2, choices=orphanage_settings.STUDENT_DECISION_CHOICES, default="", blank=True)
     s2_mark = models.DecimalField('نقطة الدورة الثانية', max_digits=4, decimal_places=2, null=True, blank=True)
+    s2_decision = models.CharField('ميزة الدورة الثانية', max_length=2, choices=orphanage_settings.STUDENT_DECISION_CHOICES, default="", blank=True)
     year_mark = models.DecimalField('معدل السنة', max_digits=4, decimal_places=2, null=True, blank=True)
-    status = models.CharField('الحالة', max_length=10, choices=orphanage_settings.STUDENT_STATUS_CHOICES, default='passed', blank=True)
+    year_decision = models.CharField('ميزة السنة', max_length=2, choices=orphanage_settings.STUDENT_DECISION_CHOICES, default="", blank=True)
+    status = models.CharField('الحالة', max_length=10, choices=orphanage_settings.STATUS_CHOICES, default='passed', blank=True)
 
     # Functions
     def __str__(self):
         return f"{self.child} - {self.grade}"
 
-    # def save(self, *args, **kwargs):
-    #     if self.full_name != self.first_name + ' ' + self.last_name:
-    #         self.update_full_name()
-    #     super(Student, self).save(*args, **kwargs)
+    def save(self, grade=None, *args, **kwargs):
+        if not self.id:
+            self.grade = grade
+        
+        if 's1_mark' in kwargs['update_fields'] or 's2_mark' in kwargs['update_fields'] or 'year_mark' in kwargs['update_fields']:
+            self.update_decisions()
+        super(Student, self).save(*args, **kwargs)
+    
+    def update_decisions(self):
+        self.s1_decision = calculate_decision(self.s1_mark)
+        self.s2_decision = calculate_decision(self.s2_mark)
+        self.year_decision = calculate_decision(self.year_mark)
+        super(Student, self).save()
 
     def delete(self, *args, **kwargs):
         super(Student, self).delete(*args, **kwargs)
@@ -206,17 +221,17 @@ class Student(models.Model):
         filters = Q(grade=grade)
         if 's_query' in kwargs:
             name = kwargs['s_query'][0]
-            filters &= Q(child_first_name__icontains=name) | Q(child_last_name__icontains=name) | Q(child_full_name__icontains=name)
+            filters &= Q(child__first_name__icontains=name) | Q(child__last_name__icontains=name) | Q(child__full_name__icontains=name)
         if 'name' in kwargs:
             name = kwargs['name'][0]
-            filters &= Q(child_first_name__icontains=name) | Q(child_last_name__icontains=name) | Q(child_full_name__icontains=name)
+            filters &= Q(child__first_name__icontains=name) | Q(child__last_name__icontains=name) | Q(child__full_name__icontains=name)
         if 'ids' in kwargs:
             ids = kwargs['ids']
             filters &= Q(id__in=ids)
 
         if 'subscription_id' in kwargs and kwargs['subscription_id'][0]:
             subscription_id = kwargs['subscription_id'][0]
-            filters = Q(subscription_id=subscription_id)
+            filters = Q(child__subscription_id=subscription_id)
         if 'status' in kwargs and kwargs['status'][0]:
             status = kwargs['status'][0]
             filters = Q(status=status)
@@ -248,6 +263,7 @@ class Grade(models.Model):
     title = models.CharField('المستوى', max_length=255)
     level = models.PositiveSmallIntegerField('المستوى')
     year = models.ForeignKey(Year, on_delete=models.PROTECT)
+    mark_ceiling = models.PositiveSmallIntegerField('أعلى نقطة ممكنة', default=10)
 
     def __str__(self):
         return f"{self.title}"

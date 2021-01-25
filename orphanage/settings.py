@@ -21,20 +21,23 @@ ORPHAN_CHOICES = (
     ('both', 'الأم و الأب')
 )
 
+
+# Student settings
 STATUS_CHOICES = getattr(settings, 'STATUS_CHOICES', (
     ('', 'إختر من القائمة'),
     ('new', 'وافد'),
+    ('qualified', 'متأهل'),
     ('left', 'مغادر'),
     ('dropped', 'منقطع'),
 ))
 
-
-# Student settings
-STUDENT_STATUS_CHOICES = getattr(settings, 'STUDENT_STATUS_CHOICES', (
+STUDENT_DECISION_CHOICES = getattr(settings, 'STUDENT_STATUS_CHOICES', (
     ('', 'إختر من القائمة'),
-    ('new', 'مستجد'),
-    ('passed', 'متأهل'),
-    ('repeated', 'مكرر'),
+    ('F', 'راسب'),
+    ('C', 'مقبول'),
+    ('B', 'مستحسن'),
+    ('A', 'حسن'),
+    ('A+', 'حسن جدا'),
 ))
 
 

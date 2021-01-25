@@ -91,7 +91,7 @@ def child_insert(request):
         if form.is_valid():
             form.instance.birthday = form.cleaned_data['birthday']
             form.instance.save()
-            child_title = 'الطفل' if form.instance.child.sex == 'm' else 'الطفلة'
+            child_title = 'الطفل' if form.instance.sex == 'm' else 'الطفلة'
             messages.success(request, 'تمت إضافة ' + child_title + ' بنجاح.')
             return redirect(reverse('orphanage:child_details', args=[form.instance.id]))
         messages.error(request, 'المرجو مراجعة بيانات الطفل(ة)')
@@ -112,7 +112,7 @@ def child_insert(request):
 def child_details(request, child_id):
     
     child = get_object_or_404(Child, id=child_id)
-    child_title = 'الطفل' if child.child.sex == 'm' else 'الطفلة'
+    child_title = 'الطفل' if child.sex == 'm' else 'الطفلة'
 
     if request.method == 'POST':
         if request.POST['action'] == 'delete':

@@ -91,14 +91,16 @@ def student_insert(request, grade_id):
     grade = get_object_or_404(Grade, pk=grade_id)
     
     if request.method == 'POST':
-        form = StudentForm(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            form.instance.birthday = form.cleaned_data['birthday']
-            form.instance.save()
-            student_title = 'الطفل' if form.instance.child.sex == 'm' else 'الطفلة'
-            messages.success(request, 'تمت إضافة ' + student_title + ' بنجاح.')
-            return redirect(reverse('orphanage:student_details', args=[grade.id, form.instance.id]))
-        messages.error(request, 'المرجو مراجعة بيانات التلميذ(ة)')
+        if request.POST['action'] == 'save':
+            form = StudentForm(data=request.POST, files=request.FILES)
+            if form.is_valid():
+                form.instance.save(grade=grade)
+                student_title = 'التلميذ' if form.instance.child.sex == 'm' else 'التلميذة'
+                messages.success(request, 'تمت إضافة ' + student_title + ' بنجاح.')
+                return redirect(reverse('orphanage:student_details', args=[grade.id, form.instance.id]))
+            messages.error(request, 'المرجو مراجعة بيانات التلميذ(ة)')
+        else:
+            raise Http404
     else:
         form = StudentForm()
 
@@ -141,24 +143,23 @@ def student_update(request, grade_id, student_id):
 
     grade = get_object_or_404(Grade, pk=grade_id)
     student = get_object_or_404(Student, id=student_id)
+    student_title = 'التلميذ' if student.child.sex == 'm' else 'التلميذة'
 
     if request.method == 'POST':
         form = StudentForm(data=request.POST, files=request.FILES, instance=student)
         if form.is_valid():
-            form.instance.birthday = form.cleaned_data['birthday']
-            form.instance.save()
-            student_title = 'الطفل' if student.child.sex == 'm' else 'الطفلة'
-            messages.success(request, 'تمت عملية تحديث بيانات ' + student_title + ' بنجاح.')
+            if form.changed_data:
+                form.instance.save(update_fields=form.changed_data)
+                messages.success(request, 'تمت عملية تحديث بيانات ' + student_title + ' بنجاح.')
             return redirect(reverse('orphanage:student_details', args=[grade.id, student.id]))
-        messages.error(request, f'المرجو مراجعة بيانات التلميذ(ة) {form.errors}')
     else:
-        form = StudentForm(instance=student, initial={'birthday': student.birthday})
+        form = StudentForm(instance=student)
 
     context = {
         'form': form,
         'grade': grade,
         'page_title': 'Student update',
-        'page_title_ar': f'تحديث بيانات التلاميذ {student}'
+        'page_title_ar': f'تحديث بيانات {student_title} {student}'
     }
 
     return render(request, 'orphanage/student/student_update.html', context)

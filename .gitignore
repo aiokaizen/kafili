@@ -6,3 +6,5 @@ __pycache__
 /static
 /tmp
 node_modules
+website
+*.sqlite3

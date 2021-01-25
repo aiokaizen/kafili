@@ -11,16 +11,13 @@
         }
     </style>
 
-    <!-- Daterangepicker CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'orphanage/app-assets/vendors/css/pickers/datetime/bootstrap-datetimepicker.css' %}">
-
-    <link rel="stylesheet" type="text/css" href="{% static 'orphanage/app-assets/css-rtl/plugins/forms/validation/form-validation.css' %}">
+    {% include 'orphanage/imports/css/forms.html' %}
 
 {% endblock extra_css %}
 
 {% block header_actions %}
     <div class="btn-group float-md-right" role="group" aria-label="Button group with nested dropdown">
-        <a class="btn btn-outline-primary" href="{% if form.instance.id %}{%  url 'orphanage:student_details' grade.id form.instance.id %}{% else %}{%  url 'orphanage:students'grade.id  %}{% endif %}">
+        <a class="btn btn-outline-primary" href="{% if form.instance.id %}{%  url 'orphanage:student_details' grade.id form.instance.id %}{% else %}{%  url 'orphanage:students' grade.id  %}{% endif %}">
             <i class="ft-x"></i> إلغاء
         </a>
     </div>
@@ -32,254 +29,73 @@
         <div class="container mt-3">
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="row infos">
-                    <div class="col-md-3 col-sm-12 img_container">
-                        <img class="image" src="{% if form.instance.picture %}{{ form.instance.picture.url }}{% else %}/static/orphanage/img/default/{% if form.instance.sex == 'm' %}boy{% else %}girl{% endif %}_avatar.png{% endif %}" alt="{{ form.instance.full_name }}">
-                        <div class="form-group mt-1">
-                            <div class="custom-file">
-                                {{ form.picture }}
-                                <label class="custom-file-label" for="id_picture">إختر الصورة</label>
+                <div class="row">
+                    <div class="col-md-9 col-sm-12">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 form-group{% if form.child.errors %} error{% endif %}">
+                                <label class="font-weight-bold" for="id_child">{{ form.child.label }}</label>
+                                {{ form.child }}
+                                {% if form.child.errors %}
+                                    <div class="help-block"><ul class="alert">
+                                        {% for error in form.child.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul></div>
+                                {% endif %}
                             </div>
-                            {% if form.picture.errors %}
-                                <div class="help-block d-block font-weight-bold"><ul class="alert">
-                                    {% for error in form.picture.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul></div>
-                            {% endif %}
+                            <div class="col-md-6 col-sm-12 form-group{% if form.status.errors %} error{% endif %}">
+                                <label class="font-weight-bold" for="id_status">{{ form.status.label }}</label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                    <div class="help-block"><ul class="alert">
+                                        {% for error in form.status.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul></div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 col-sm-12 form-group{% if form.s1_mark.errors %} error{% endif %}">
+                                <label class="font-weight-bold" for="id_s1_mark">{{ form.s1_mark.label }}</label>
+                                {{ form.s1_mark }}
+                                {% if form.s1_mark.errors %}
+                                    <div class="help-block"><ul class="alert">
+                                        {% for error in form.s1_mark.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul></div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 col-sm-12 form-group{% if form.s2_mark.errors %} error{% endif %}">
+                                <label class="font-weight-bold" for="id_s2_mark">{{ form.s2_mark.label }}</label>
+                                {{ form.s2_mark }}
+                                {% if form.s2_mark.errors %}
+                                    <div class="help-block"><ul class="alert">
+                                        {% for error in form.s2_mark.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul></div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 col-sm-12 form-group{% if form.year_mark.errors %} error{% endif %}">
+                                <label class="font-weight-bold" for="id_year_mark">{{ form.year_mark.label }}</label>
+                                {{ form.year_mark }}
+                                {% if form.year_mark.errors %}
+                                    <div class="help-block"><ul class="alert">
+                                        {% for error in form.year_mark.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul></div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="col-md-9 col-sm-12 basic-infos">
-                        <div class="row">
-                            <div class="col-sm">
-                                <div class="row">
-                                    <div class="col-md-6 form-group{% if form.subscription_id.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_subscription_id">{{ form.subscription_id.label }}</label>
-                                        {{ form.subscription_id }}
-                                        {% if form.subscription_id.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.subscription_id.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 form-group{% if form.first_name.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_first_name">{{ form.first_name.label }}</label>
-                                        {{ form.first_name }}
-                                        {% if form.first_name.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.first_name.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6 form-group{% if form.last_name.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_last_name">{{ form.last_name.label }}</label>
-                                        {{ form.last_name }}
-                                        {% if form.last_name.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.last_name.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 form-group{% if form.sex.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_first_name">{{ form.sex.label }}</label>
-                                        {{ form.sex }}
-                                        {% if form.sex.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.sex.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="form-group col-md{% if form.birthday.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_birthday">{{ form.birthday.label }}</label>
-                                        <div class="input-group date datetimepicker">
-                                            {{ form.birthday }}
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">
-                                                    <span class="fa fa-calendar"></span>
-                                                </span>
-                                            </div>
-                                            {% if form.birthday.errors %}
-                                                <div class="help-block"><ul class="alert">
-                                                    {% for error in form.birthday.errors %}
-                                                        <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul></div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 form-group{% if form.village.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_first_name">{{ form.village.label }}</label>
-                                        {{ form.village }}
-                                        {% if form.village.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.village.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6 form-group{% if form.phone_number.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_birthday">{{ form.phone_number.label }}</label>
-                                        {{ form.phone_number }}
-                                        {% if form.phone_number.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.phone_number.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 form-group{% if form.height.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_first_name">{{ form.height.label }}</label>
-                                        {{ form.height }}
-                                        {% if form.height.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.height.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6 form-group{% if form.weight.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_birthday">{{ form.weight.label }}</label>
-                                        {{ form.weight }}
-                                        {% if form.weight.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.weight.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 form-group{% if form.shoo_size.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_first_name">{{ form.shoo_size.label }}</label>
-                                        {{ form.shoo_size }}
-                                        {% if form.shoo_size.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.shoo_size.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6 form-group{% if form.bed_position.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_birthday">{{ form.bed_position.label }}</label>
-                                        {{ form.bed_position }}
-                                        {% if form.bed_position.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.bed_position.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 form-group{% if form.chronic_disease.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_first_name">{{ form.chronic_disease.label }}</label>
-                                        {{ form.chronic_disease}}
-                                        {% if form.chronic_disease.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.chronic_disease.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6 form-group{% if form.vision.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_birthday">{{ form.vision.label }}</label>
-                                        {{ form.vision }}
-                                        {% if form.vision.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.vision.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 form-group{% if form.hobby.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_first_name">{{ form.hobby.label }}</label>
-                                        {{ form.hobby}}
-                                        {% if form.hobby.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.hobby.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6 form-group{% if form.grade.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_birthday">{{ form.grade.label }}</label>
-                                        {{ form.grade }}
-                                        {% if form.grade.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.grade.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 form-group{% if form.status.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_first_name">{{ form.status.label }}</label>
-                                        {{ form.status}}
-                                        {% if form.status.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.status.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6 form-group{% if form.orphan_side.errors %} error{% endif %}">
-                                        <label class="font-weight-bold" for="id_birthday">{{ form.orphan_side.label }}</label>
-                                        {{ form.orphan_side }}
-                                        {% if form.orphan_side.errors %}
-                                            <div class="help-block"><ul class="alert">
-                                                {% for error in form.orphan_side.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul></div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <hr>
-                                <a class="btn btn-secondary font-weight-bold" href="{% if form.instance.id %}{%  url 'orphanage:student_details' grade.id form.instance.id %}{% else %}{%  url 'orphanage:students' grade.id %}{% endif %}">
-                                    إلغاء
-                                </a>
-                                <button class="btn btn-primary font-weight-bold" type="submit">{% if form.instance.id %}تحديث{% else %}إضافة{% endif %}</button>
-                            </div>
-                        </div>
+                    <div class="col-12">
+                        <a class="btn btn-secondary font-weight-bold" href="{% if form.instance.id %}{% url 'orphanage:student_details' grade.id form.instance.id %}{% else %}{% url 'orphanage:students' grade.id %}{% endif %}">
+                            إلغاء
+                        </a>
+                        <button class="btn btn-primary font-weight-bold" type="submit" name="action" value="save">
+                            {% if form.instance.id %}تحديث{% else %}إضافة{% endif %}
+                            </button>
                     </div>
                 </div>
             </form>
@@ -290,10 +106,7 @@
 
 {% block extra_js %}
 
-    <!-- Daterangepicker JavaScript -->
-    <script src="{% static 'orphanage/app-assets/vendors/js/pickers/dateTime/moment-with-locales.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'orphanage/app-assets/vendors/js/pickers/dateTime/bootstrap-datetimepicker.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'orphanage/app-assets/js/scripts/forms/validation/form-validation.js' %}" type="text/javascript"></script>
+    {% include 'orphanage/imports/js/forms.html' %}
 
     <script>
         $('.datetimepicker').datetimepicker({
@@ -301,14 +114,6 @@
             locale: 'fr',
 		    format: 'DD/MM/YYYY'
         });
-    </script>
-    
-    <script>
-        document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-          var name = this.files[0].name;
-          var nextSibling = e.target.nextElementSibling;
-          nextSibling.innerText = name;
-        })
     </script>
 
 {% endblock extra_js %}
