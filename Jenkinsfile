@@ -12,7 +12,17 @@ pipeline {
             steps {
                 echo "Building.."
                 sh '''
-                echo "doing build stuff.."
+#!/bin/bash
+
+. ~/.bashrc
+
+echo "BUILD_ID=${BUILD_ID}" > build_info.txt
+echo "BUILD_URL=${BUILD_URL}" >> build_info.txt
+
+python -m venv venv
+. venv/bin/activate
+pip install --upgrade pip setuptools wheel cffi
+pip install -r requirements.txt
                 '''
             }
         }
@@ -20,7 +30,7 @@ pipeline {
             steps {
                 echo "Testing.."
                 sh '''
-                echo "doing test stuff.."
+python manage.py migrate
                 '''
             }
         }
@@ -28,7 +38,7 @@ pipeline {
             steps {
                 echo 'Deliver....'
                 sh '''
-                echo "doing delivery stuff.."
+                echo "Delivery was successful."
                 '''
             }
         }
