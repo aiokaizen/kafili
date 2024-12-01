@@ -30,6 +30,9 @@ pip install -r requirements.txt
             steps {
                 echo "Testing.."
                 sh '''
+#!/bin/bash
+. ~/.bashrc
+. venv/bin/activate
 python manage.py migrate
                 '''
             }
